@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name=AsySpecX
+#SBATCH --job-name=run
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -9,11 +9,13 @@
 #SBATCH --account=OD-241336
 #SBATCH --output=logs/slurm/slurm-%x-%j.out
 
-# Usage: sbatch -J AsySpecX_<DATASET> scripts/slurm/baseline.sbatch <DATASET>
+# Usage: sbatch -J <MODEL>_<DATASET> scripts/slurm/baseline.sbatch <MODEL> <DATASET>
+#   MODEL ∈ {AsySpecX, JointMLP}
 # Optional env: SMOKE=1 to restrict the sweep inside the dataset script.
 
 set -euo pipefail
-DATASET="${1:?dataset key required}"
+MODEL="${1:?model name required (AsySpecX | JointMLP)}"
+DATASET="${2:?dataset key required}"
 
 source ~/.bashrc
 conda activate tsfm
@@ -22,11 +24,11 @@ export CUDA_VISIBLE_DEVICES=0
 
 # resolve repo root from this script's location so the job is portable
 cd "$(cd -- "$(dirname -- "$0")/../.." && pwd)"
-mkdir -p logs/AsySpecX logs/slurm checkpoints results
+mkdir -p logs/${MODEL} logs/slurm checkpoints results
 
-echo "==== AsySpecX on ${DATASET} (account=OD-241336, env=tsfm, seed=2026) ===="
+echo "==== ${MODEL} on ${DATASET} (account=OD-241336, env=tsfm) ===="
 echo "SMOKE=${SMOKE:-0}  Start: $(date)"
 
-bash scripts/AsySpecX/${DATASET}.sh
+bash scripts/${MODEL}/${DATASET}.sh
 
 echo "End: $(date)"
