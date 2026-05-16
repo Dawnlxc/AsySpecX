@@ -1,0 +1,44 @@
+#!/bin/bash
+# AsySpecX benchmark — MixLinear on PEMS08.
+# Hyperparams from aitianma/MixLinear/scripts/MixLinear/<ds>.sh
+set -euo pipefail
+cd "$(cd -- "$(dirname -- "$0")/../.." && pwd)"
+source scripts/_common.sh
+load_dataset PEMS08
+
+SEED=2026
+MODEL=MixLinear
+mkdir -p logs/$MODEL checkpoints results
+
+if [ "${SMOKE:-0}" = "1" ]; then
+  SEQ_LENS=(96)
+  PRED_LENS_OVERRIDE="96 720"
+else
+  SEQ_LENS=(96)  # PEMS uses fixed sl=96 (paper convention)
+  PRED_LENS_OVERRIDE=""
+fi
+
+for sl in "${SEQ_LENS[@]}"; do
+  PL_LIST=$pred_lens
+  if [ -n "$PRED_LENS_OVERRIDE" ]; then PL_LIST=$PRED_LENS_OVERRIDE; fi
+  for pl in $PL_LIST; do
+    apply_mixlinear_overrides $data_key
+    if ! period_compatible $sl $pl $period_len; then
+      echo "[skip] $MODEL $data_key sl=$sl pl=$pl period=$period_len (not divisible)"
+      continue
+    fi
+    log_file=logs/$MODEL/${MODEL}_${data_key}_sl${sl}_pl${pl}_sd${SEED}.log
+    echo "[$(date '+%F %T')] $MODEL $data_key sl=$sl pl=$pl period=$period_len alpha=$alpha lpf=$lpf lr=$lr"
+    python -u run.py \
+      --is_training 1 --random_seed $SEED \
+      --root_path ./dataset/$subdir/ --data_path $data_path \
+      --model_id ${data_key}_${sl}_${pl} \
+      --model $MODEL --data $data_name --features M \
+      --seq_len $sl --pred_len $pl --enc_in $enc_in \
+      --train_epochs $epochs --patience $patience \
+      --batch_size $bs --learning_rate $lr --num_workers 4 \
+      --itr 1 \
+      --period_len $period_len --alpha $alpha --lpf $lpf \
+      > "$log_file" 2>&1 || echo "[fail] see $log_file"
+  done
+done

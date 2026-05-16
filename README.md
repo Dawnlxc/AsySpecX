@@ -1,40 +1,51 @@
 # AsySpecX & JointMLP
 
-Two related models for multivariate long-term time series forecasting, sharing a single TQNet-derived training / evaluation harness.
+Long-term multivariate time series forecasting research repo. Two active model lines plus a curated set of published baselines for head-to-head benchmarking. Shared TQNet-derived training/evaluation harness.
 
-| Model | File | Idea |
+→ **See [`RESULTS.md`](RESULTS.md) for the comparison numbers.**
+
+## Models
+
+| Category | File | Notes |
 | --- | --- | --- |
-| **AsySpecX** | [`models/AsySpecX.py`](models/AsySpecX.py) | Asymmetric Spectral Transfer — low-rank `H = A diag(g_m) Bᵀ` with per-band gates, applied in the frequency domain. Paper in preparation. |
-| **JointMLP (JA v4)** | [`models/JointMLP.py`](models/JointMLP.py) + [`models/JointAxisTWCMv4.py`](models/JointAxisTWCMv4.py) | TQNet MLP backbone + frequency-conditioned JointAxisTWCM **v4** (per-bin per-frame gain `g_{k, t'}`) replacing TQNet's `temporalQuery[cycle_index]` and channel `MultiheadAttention`. |
+| **Active line — AsySpecX** | [`models/AsySpecX.py`](models/AsySpecX.py) | Asymmetric Spectral Transfer (paper in preparation). Lite/deployment variant. |
+| | [`models/AsySpecXResid.py`](models/AsySpecXResid.py) | Paper-flagship variant: FITS-style self-predictor + Hermitian residual cross block. Strongest on long-horizon ETTh2 (−49 % vs DLinear) and PEMS_BAY sensor outage (−62 %). |
+| | [`models/FreqHerm.py`](models/FreqHerm.py) | Foundational symmetric cross-block; used as a building block in AsySpecXResid. |
+| | [`models/FreqHermCycle.py`](models/FreqHermCycle.py) | FreqHerm + CycleNet-style cycle decomposition. Strongest on PEMS_BAY traffic recovery (−65 % vs DLinear). |
+| | [`models/FreqHermCycleAttn.py`](models/FreqHermCycleAttn.py) | + attention readout. Strongest on Beijing-Air132 multimodal (−16 % vs TQNet). |
+| **Active line — JointMLP** | [`models/JointMLP.py`](models/JointMLP.py) | TQNet MLP backbone + JA cross-channel mixer. |
+| | [`models/JointAxisTWCMv4.py`](models/JointAxisTWCMv4.py) | JA v4 backend: per-bin per-frame gain `g_{k, t'}`. Imported by `JointMLP`. |
+| **Published baselines (10)** | TQNet, CycleNet, DLinear, iTransformer, PatchTST, FITS, FreTS, FilterNet, SparseTSF, MixLinear | One `models/<Name>.py` each. Per-baseline scripts under `scripts/<Name>/`. |
 
-Pick a model via `--model AsySpecX` or `--model JointMLP`.
+Pick a model via `--model <Name>` (any key in `exp/exp_main.py::model_dict`).
 
 ## Layout
 
 ```
-models/
-  AsySpecX.py          ← model A (single Model class)
-  JointMLP.py          ← model B (MLP backbone + RIN + JA-v4 cross-channel)
-  JointAxisTWCMv4.py   ← JA v4 backend imported by JointMLP
-exp/exp_main.py        ← shared train/eval loop; model_dict registers both
-data_provider/         ← ETT / custom CSV / Solar / PEMS loaders
-layers/                ← shared layers (RevIN, attention families, embeddings, …)
-utils/                 ← metrics, masking, time features, tools
-run.py                 ← argparse entry point (carries flags for both models)
-requirements.txt       ← shared dependency pins
+models/                     all model files; each exports `class Model(nn.Module)`
+exp/exp_main.py             shared train/eval loop; model_dict registers every model
+data_provider/              ETT / custom CSV / Solar / PEMS dataset loaders
+layers/                     shared layers (RevIN, attention families, embeddings, …)
+utils/                      metrics, masking, time features, tools
+run.py                      argparse entry point (carries flags for all models)
+requirements.txt            shared dependency pins
 
 scripts/
-  _common.sh                       ← load_dataset + apply_asyspecx_overrides
-  AsySpecX/<Dataset>.sh            ← per-dataset launcher (sources _template.sh)
-  AsySpecX/_template.sh            ← shared template for the AsySpecX sweep
-  JointMLP/<Dataset>.sh            ← per-dataset launcher
-  JointMLP/_template.sh            ← shared template for the JointMLP sweep
-  slurm/baseline.sbatch            ← `sbatch ... baseline.sbatch <MODEL> <DATASET>`
-  slurm/submit_all.sh              ← `--model X --smoke | --full | --dataset Y`
+  _common.sh                load_dataset + per-model apply_<name>_overrides helpers
+                            (apply_asyspecx_overrides, apply_cyclenet_overrides, …)
+  AsySpecX/<Dataset>.sh     per-(model, dataset) sweep scripts
+  JointMLP/<Dataset>.sh     (one subdir per model that has a sweep)
+  FreqHerm/<Dataset>.sh
+  FreqHermCycle/<Dataset>.sh
+  TQNet/<Dataset>.sh        (one subdir per baseline)
+  ...
+  slurm/baseline.sbatch     sbatch ... baseline.sbatch <MODEL> <DATASET>
+  slurm/submit_all.sh       --model X / --all-baselines / --smoke / --full / --dataset Y
 
-analysis_exp/          ← post-hoc analysis & visualization scripts (AsySpecX-focused)
-Figures/               ← published figures (carried over from TQNet)
-acf_plot.ipynb         ← exploratory autocorrelation notebook
+analysis_exp/               post-hoc analysis & visualization scripts
+Figures/                    published figures (carried over from TQNet upstream)
+acf_plot.ipynb              exploratory autocorrelation notebook
+RESULTS.md                  comparison numbers vs baselines (see top of this README)
 ```
 
 Runtime-generated dirs `logs/`, `results/`, `checkpoints/`, `dataset/`, `figures/`, `probe/` are gitignored.
@@ -58,28 +69,28 @@ Standard LTSF datasets (ETTh1/2, ETTm1/2, weather, electricity, traffic, PEMS03/
 ### Local single run
 ```bash
 conda activate tsfm
-bash scripts/AsySpecX/ETTh1.sh           # full AsySpecX sweep for ETTh1
-SMOKE=1 bash scripts/AsySpecX/ETTh1.sh   # AsySpecX, sl=96 pl=96 only
-bash scripts/JointMLP/ETTh1.sh           # full JointMLP (JA v4) sweep for ETTh1
+bash scripts/AsySpecX/ETTh1.sh           # full sweep for one (model, dataset)
+SMOKE=1 bash scripts/AsySpecX/ETTh1.sh   # restrict to sl=96, pl=96
+bash scripts/TQNet/ETTh1.sh              # baselines work the same way
 ```
 
 ### Slurm
 ```bash
-bash scripts/slurm/submit_all.sh --model AsySpecX --smoke
-bash scripts/slurm/submit_all.sh --model JointMLP --full
-bash scripts/slurm/submit_all.sh --model AsySpecX --dataset ETTh1
+bash scripts/slurm/submit_all.sh --model AsySpecX --smoke      # one model, smoke
+bash scripts/slurm/submit_all.sh --model JointMLP --full       # one model, full sweep
+bash scripts/slurm/submit_all.sh --model TQNet --dataset ETTh1 # one (model, dataset)
+bash scripts/slurm/submit_all.sh --all-baselines --full        # all 10 baselines × 11 datasets = 110 jobs
+bash scripts/slurm/submit_all.sh --all-baselines --smoke       # 5 reps × 2 datasets = 10 jobs
 ```
 
-Each slurm job runs the full `seed × sl × pl` sweep for one (model, dataset) sequentially within a 12h, 1-GPU, 64GB allocation. The slurm template resolves the repo root relative to the script's own location, so it's portable across users / paths.
+Each slurm job runs the full `seed × sl × pl` sweep for one (model, dataset) sequentially within a 12 h, 1-GPU, 64 GB allocation. The slurm template resolves the repo root from the script's own location, so it's portable.
 
 ## Benchmark protocol
 
-- **Seeds**: `{2026, 2027}` per configuration
-- **Lookback sweep**: `seq_len ∈ {96, 720}` (AsySpecX) / `{96, 336, 720}` (JointMLP); PEMS fixed at `seq_len = 96`
+- **Seeds**: `{2026, 2027}` for the active lines; baseline sweep used seed `2026` only
+- **Lookback sweep**: `seq_len ∈ {96, 720}` for AsySpecX / `{96, 336, 720}` for JointMLP; PEMS fixed at `seq_len = 96`
 - **Pred-len sweep**: `{96, 192, 336, 720}` for non-PEMS, `{12, 24, 48, 96}` for PEMS
-- **AsySpecX hyperparameters**: probe-driven defaults — `gate_init=0`, `gate_max=1.0`, `rank=2` for high-channel datasets, `rank=8` for small-channel. See `apply_asyspecx_overrides` in `scripts/_common.sh`.
-- **JointMLP hyperparameters**: `--jmlp_window` (auto), `--jmlp_stride` (auto), `--jmlp_rank=8`, `--jmlp_delta_hidden=64`, `--jmlp_gate_init=-1.0`, entropy gate on, innovation-only off. See `scripts/JointMLP/_template.sh`.
 
 ## License & attribution
 
-Apache 2.0 — see [`LICENSE`](LICENSE). The training/evaluation harness is adapted from [TQNet](https://github.com/ACAT-SCUT/TQNet) (Lin et al., ICML 2025).
+Apache 2.0 — see [`LICENSE`](LICENSE). The training/evaluation harness and baseline implementations are adapted from [TQNet](https://github.com/ACAT-SCUT/TQNet) (Lin et al., ICML 2025); per-baseline upstream sources are credited in `models/<Name>.py` docstrings.

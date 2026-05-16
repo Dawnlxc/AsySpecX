@@ -1,6 +1,13 @@
 from data_provider.data_factory import data_provider
 from exp.exp_basic import Exp_Basic
-from models import AsySpecX, JointMLP
+from models import (
+    AsySpecX, JointMLP,
+    # promising experimental variants
+    AsySpecXResid, FreqHerm, FreqHermCycle, FreqHermCycleAttn,
+    # baselines
+    TQNet, CycleNet, DLinear, iTransformer, PatchTST,
+    FITS, FreTS, FilterNet, SparseTSF, MixLinear,
+)
 from utils.tools import EarlyStopping, adjust_learning_rate, visual, test_params_flop
 from utils.metrics import metric
 
@@ -28,6 +35,22 @@ class Exp_Main(Exp_Basic):
         model_dict = {
             'AsySpecX': AsySpecX,
             'JointMLP': JointMLP,
+            # promising experimental variants
+            'AsySpecXResid': AsySpecXResid,
+            'FreqHerm': FreqHerm,
+            'FreqHermCycle': FreqHermCycle,
+            'FreqHermCycleAttn': FreqHermCycleAttn,
+            # baselines
+            'TQNet': TQNet,
+            'CycleNet': CycleNet,
+            'DLinear': DLinear,
+            'iTransformer': iTransformer,
+            'PatchTST': PatchTST,
+            'FITS': FITS,
+            'FreTS': FreTS,
+            'FilterNet': FilterNet,
+            'SparseTSF': SparseTSF,
+            'MixLinear': MixLinear,
         }
         model = model_dict[self.args.model].Model(self.args).float()
 
