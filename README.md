@@ -1,28 +1,44 @@
 # AsySpecX & JointMLP
 
-Long-term multivariate time series forecasting research repo. Two active model lines plus a curated set of published baselines for head-to-head benchmarking. Shared TQNet-derived training/evaluation harness.
+Two promising research models for long-term multivariate time series forecasting, plus the 10 published baselines they compete against, sharing a single TQNet-derived training/evaluation harness.
 
-→ **See [`RESULTS.md`](RESULTS.md) for the comparison numbers.**
+→ **See [`RESULTS.md`](RESULTS.md) for the full comparison vs baselines.**
 
-## Models
+## The two promising lines
 
-| Category | File | Notes |
+### 1. JointMLP (JA v4)  —  `models/JointMLP.py` + `models/JointAxisTWCMv4.py`
+
+TQNet MLP backbone + frequency-conditioned JA cross-channel mixer (v4: per-bin per-frame gain `g_{k, t'}`). Replaces TQNet's `temporalQuery[cycle_index]` and the flat channel `MultiheadAttention`.
+
+**Wins on standard MTSF**: 8 / 44 settings vs the 10 baselines (tied with TQNet and CycleNet for #2 baseline-or-active winner; iTransformer leads with 12). Strongest on `ETTm1` (sweeps pl ∈ {96, 192, 336}), `weather pl={96, 336}`, `PEMS03 pl={12, 24}`, `ETTh1 pl=192`. See [`RESULTS.md`](RESULTS.md#jointmlp-line--8-wins--44-settings).
+
+### 2. AsySpecX line  —  `models/AsySpecX.py` + `models/AsySpecXResid.py`
+
+Asymmetric Spectral Transfer: low-rank `H = A diag(g_m) Bᵀ` with per-band gates, applied in the frequency domain. Paper in preparation.
+
+- **`AsySpecX.py`** — the original / lite variant. 1 standard-MTSF win (`ETTh2 pl=192`, sl=720).
+- **`AsySpecXResid.py`** — the paper-flagship variant: FITS-style self-predictor + Hermitian residual cross block. Documented wins on **two separate benchmarks** (not in our sl=96 standard MTSF table):
+  - **PEMS_BAY sensor outage** (mode B, held-out 6/325 sensors): **0.472 MSE — −62 % vs DLinear** (1.247). 3-seed verified, rel std 1.5 %.
+  - **ETTh2 pl=720 long-horizon MTSF** (sl=720): **0.419 MSE — −49 % vs DLinear** (0.819). 3-seed verified, rel std 0.05 %.
+
+Source: upstream `probe/FINAL_RESULTS_TABLE.md`.
+
+## All models in the repo
+
+| Category | File | Status |
 | --- | --- | --- |
-| **Active line — AsySpecX** | [`models/AsySpecX.py`](models/AsySpecX.py) | Asymmetric Spectral Transfer (paper in preparation). Lite/deployment variant. |
-| | [`models/AsySpecXResid.py`](models/AsySpecXResid.py) | Paper-flagship variant: FITS-style self-predictor + Hermitian residual cross block. Strongest on long-horizon ETTh2 (−49 % vs DLinear) and PEMS_BAY sensor outage (−62 %). |
-| | [`models/FreqHerm.py`](models/FreqHerm.py) | Foundational symmetric cross-block; used as a building block in AsySpecXResid. |
-| | [`models/FreqHermCycle.py`](models/FreqHermCycle.py) | FreqHerm + CycleNet-style cycle decomposition. Strongest on PEMS_BAY traffic recovery (−65 % vs DLinear). |
-| | [`models/FreqHermCycleAttn.py`](models/FreqHermCycleAttn.py) | + attention readout. Strongest on Beijing-Air132 multimodal (−16 % vs TQNet). |
-| **Active line — JointMLP** | [`models/JointMLP.py`](models/JointMLP.py) | TQNet MLP backbone + JA cross-channel mixer. |
-| | [`models/JointAxisTWCMv4.py`](models/JointAxisTWCMv4.py) | JA v4 backend: per-bin per-frame gain `g_{k, t'}`. Imported by `JointMLP`. |
-| **Published baselines (10)** | TQNet, CycleNet, DLinear, iTransformer, PatchTST, FITS, FreTS, FilterNet, SparseTSF, MixLinear | One `models/<Name>.py` each. Per-baseline scripts under `scripts/<Name>/`. |
+| **Active — AsySpecX** | [`models/AsySpecX.py`](models/AsySpecX.py) | Original variant; 1 standard-MTSF win |
+| | [`models/AsySpecXResid.py`](models/AsySpecXResid.py) | Paper-flagship; **−62 % sensor outage**, **−49 % ETTh2 pl=720** |
+| **Active — JointMLP** | [`models/JointMLP.py`](models/JointMLP.py) | TQNet MLP backbone + JA cross-channel |
+| | [`models/JointAxisTWCMv4.py`](models/JointAxisTWCMv4.py) | JA v4 backend imported by JointMLP |
+| **Baselines (10)** | `TQNet`, `CycleNet`, `DLinear`, `iTransformer`, `PatchTST`, `FITS`, `FreTS`, `FilterNet`, `SparseTSF`, `MixLinear` | Comparison reference |
 
 Pick a model via `--model <Name>` (any key in `exp/exp_main.py::model_dict`).
 
 ## Layout
 
 ```
-models/                     all model files; each exports `class Model(nn.Module)`
+models/                     14 model files (4 active + 10 baselines)
 exp/exp_main.py             shared train/eval loop; model_dict registers every model
 data_provider/              ETT / custom CSV / Solar / PEMS dataset loaders
 layers/                     shared layers (RevIN, attention families, embeddings, …)
@@ -31,21 +47,17 @@ run.py                      argparse entry point (carries flags for all models)
 requirements.txt            shared dependency pins
 
 scripts/
-  _common.sh                load_dataset + per-model apply_<name>_overrides helpers
-                            (apply_asyspecx_overrides, apply_cyclenet_overrides, …)
-  AsySpecX/<Dataset>.sh     per-(model, dataset) sweep scripts
-  JointMLP/<Dataset>.sh     (one subdir per model that has a sweep)
-  FreqHerm/<Dataset>.sh
-  FreqHermCycle/<Dataset>.sh
-  TQNet/<Dataset>.sh        (one subdir per baseline)
-  ...
+  _common.sh                load_dataset + per-model apply_<name>_overrides
+  AsySpecX/<Dataset>.sh     per-dataset sweep (sources _template.sh)
+  JointMLP/<Dataset>.sh
+  TQNet/<Dataset>.sh        ... (one subdir per baseline)
   slurm/baseline.sbatch     sbatch ... baseline.sbatch <MODEL> <DATASET>
   slurm/submit_all.sh       --model X / --all-baselines / --smoke / --full / --dataset Y
 
 analysis_exp/               post-hoc analysis & visualization scripts
 Figures/                    published figures (carried over from TQNet upstream)
 acf_plot.ipynb              exploratory autocorrelation notebook
-RESULTS.md                  comparison numbers vs baselines (see top of this README)
+RESULTS.md                  comparison vs baselines — see top of this README
 ```
 
 Runtime-generated dirs `logs/`, `results/`, `checkpoints/`, `dataset/`, `figures/`, `probe/` are gitignored.
@@ -69,18 +81,18 @@ Standard LTSF datasets (ETTh1/2, ETTm1/2, weather, electricity, traffic, PEMS03/
 ### Local single run
 ```bash
 conda activate tsfm
-bash scripts/AsySpecX/ETTh1.sh           # full sweep for one (model, dataset)
-SMOKE=1 bash scripts/AsySpecX/ETTh1.sh   # restrict to sl=96, pl=96
+bash scripts/JointMLP/ETTm1.sh           # full sweep for one (model, dataset)
+SMOKE=1 bash scripts/JointMLP/ETTm1.sh   # restrict to sl=96, pl=96
 bash scripts/TQNet/ETTh1.sh              # baselines work the same way
 ```
 
 ### Slurm
 ```bash
-bash scripts/slurm/submit_all.sh --model AsySpecX --smoke      # one model, smoke
-bash scripts/slurm/submit_all.sh --model JointMLP --full       # one model, full sweep
-bash scripts/slurm/submit_all.sh --model TQNet --dataset ETTh1 # one (model, dataset)
-bash scripts/slurm/submit_all.sh --all-baselines --full        # all 10 baselines × 11 datasets = 110 jobs
-bash scripts/slurm/submit_all.sh --all-baselines --smoke       # 5 reps × 2 datasets = 10 jobs
+bash scripts/slurm/submit_all.sh --model JointMLP --smoke              # one model, smoke
+bash scripts/slurm/submit_all.sh --model AsySpecX --full               # one model, full sweep
+bash scripts/slurm/submit_all.sh --model TQNet --dataset ETTh1         # one (model, dataset)
+bash scripts/slurm/submit_all.sh --all-baselines --full                # 10 baselines × 11 datasets
+bash scripts/slurm/submit_all.sh --all-baselines --smoke               # 5 reps × 2 datasets
 ```
 
 Each slurm job runs the full `seed × sl × pl` sweep for one (model, dataset) sequentially within a 12 h, 1-GPU, 64 GB allocation. The slurm template resolves the repo root from the script's own location, so it's portable.
@@ -88,7 +100,7 @@ Each slurm job runs the full `seed × sl × pl` sweep for one (model, dataset) s
 ## Benchmark protocol
 
 - **Seeds**: `{2026, 2027}` for the active lines; baseline sweep used seed `2026` only
-- **Lookback sweep**: `seq_len ∈ {96, 720}` for AsySpecX / `{96, 336, 720}` for JointMLP; PEMS fixed at `seq_len = 96`
+- **Lookback sweep**: `seq_len ∈ {96, 336, 720}` (PEMS fixed at `seq_len = 96`)
 - **Pred-len sweep**: `{96, 192, 336, 720}` for non-PEMS, `{12, 24, 48, 96}` for PEMS
 
 ## License & attribution

@@ -1,9 +1,9 @@
 from data_provider.data_factory import data_provider
 from exp.exp_basic import Exp_Basic
 from models import (
-    AsySpecX, JointMLP,
-    # promising experimental variants
-    AsySpecXResid, FreqHerm, FreqHermCycle, FreqHermCycleAttn,
+    # active research line
+    AsySpecX, AsySpecXResid,        # AsySpecX line
+    JointMLP,                        # JointMLP / JA v4 line
     # baselines
     TQNet, CycleNet, DLinear, iTransformer, PatchTST,
     FITS, FreTS, FilterNet, SparseTSF, MixLinear,
@@ -33,13 +33,10 @@ class Exp_Main(Exp_Basic):
 
     def _build_model(self):
         model_dict = {
+            # active research line
             'AsySpecX': AsySpecX,
-            'JointMLP': JointMLP,
-            # promising experimental variants
             'AsySpecXResid': AsySpecXResid,
-            'FreqHerm': FreqHerm,
-            'FreqHermCycle': FreqHermCycle,
-            'FreqHermCycleAttn': FreqHermCycleAttn,
+            'JointMLP': JointMLP,
             # baselines
             'TQNet': TQNet,
             'CycleNet': CycleNet,
