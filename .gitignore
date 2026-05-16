@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*.swo
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Runtime artifacts (large; reproducible from code)
+checkpoints/
+results/
+test_results/
+logs/
+probe/
+dataset/
+figures/          # local working figures; published ones live under Figures/
+*.pth
+*.ckpt
+*.pt
+
+# Slurm
+slurm-*.out
+*.sbatch.out
+
+# Misc
+.env
+.venv/
+venv/
+*.log
