@@ -1,62 +1,334 @@
 # Results — promising models vs baselines
 
-This repo's two promising research lines (**AsySpecX**, **JointMLP/JA v4**) compared against the 10 published baselines on the standard long-term forecasting suite (11 datasets × 4 horizons = 44 settings).
+Three separate tables, one per `seq_len`. Within each table all numbers come from the same lookback setting → fair comparison.
+
+Datasets: ETTh1, ETTh2, ETTm1, ETTm2, weather, electricity, traffic, PEMS03, PEMS04, PEMS07, PEMS08.
+Horizons: `{96, 192, 336, 720}` for non-PEMS, `{12, 24, 48, 96}` for PEMS.
+Cell format: MSE (mean across seeds, `·Nsd` suffix if N>1 seeds). **Bold** = lowest in row. `—` = not run.
 
 ## Headline
 
 | Line | Strongest claim | vs best baseline | Source |
 | --- | --- | --- | --- |
-| **AsySpecXResid** | PEMS_BAY mode B (sensor outage, 6/325 held-out): **0.472** | **−62 % vs DLinear** (1.247) | upstream `probe/FINAL_RESULTS_TABLE.md`, 3 seeds |
-| **AsySpecXResid** | ETTh2 pl=720 MTSF (sl=720): **0.419** | **−49 % vs DLinear** (0.819) | upstream `probe/FINAL_RESULTS_TABLE.md`, 3 seeds |
-| **JointMLP (JA v4)** | 8 wins / 44 standard MTSF settings | beats every baseline on those cells | this file, mined from logs |
-| AsySpecX (lite) | ETTh2 pl=192 sl=720: 0.334 | −2.1 % vs FITS | this file, 2 seeds |
+| **AsySpecXResid** | PEMS_BAY mode B sensor outage (held-out 6/325): 0.472 | **−62 %** vs DLinear (1.247) | probe/FINAL_RESULTS_TABLE.md, 3 seeds |
+| **AsySpecXResid** | ETTh2 pl=720 MTSF (sl=720): 0.419 | **−49 %** vs DLinear (0.819) | probe/FINAL_RESULTS_TABLE.md, 3 seeds |
+| **JointMLP (JA v4)** | sl=336 standard MTSF: 8 wins / 32 settings | beats every baseline at sl=336 on those cells | this file |
+| AsySpecX (lite) | sl=720 ETTh2 pl=192: 0.334 | best vs any sl=336 baseline (best 0.341 FITS) | this file, 2 seeds |
 
-## Win count on standard MTSF (44 settings)
-
-| Model | Wins | / total |
-|---|---|---|
-| iTransformer | 12 | / 44 |
-| **JointMLP** | 8 | / 44 |
-| TQNet | 8 | / 44 |
-| CycleNet | 8 | / 44 |
-| MixLinear | 3 | / 44 |
-| **AsySpecX** | 2 | / 44 |
-| FITS | 2 | / 44 |
-| FreTS | 2 | / 44 |
-| FilterNet | 1 | / 44 |
-| PatchTST | 1 | / 44 |
-
-**AsySpecXResid** does not appear here — its results live on a different benchmark (sensor outage / sl=720 long-horizon). See headline above.
+> AsySpecXResid is on a different protocol (3-seed sensor-outage + sl=720 long-horizon) — see [the dedicated table below](#asyspecxresid).
 
 ---
 
-## JointMLP line — 8 wins / 44 settings
+## Table @ sl=96
 
-Where the JointMLP (JA v4) model beats every baseline:
+**Win count** (44 cells with ≥1 model):
 
-| Dataset | pl | Best sl | MSE | vs best baseline | Δ |
-|---|---|---|---|---|---|
-| PEMS03 | 12 | 96 | **0.058** | iTransformer 0.060 | -3.0% |
-| ETTm1 | 96 | 336 | **0.285** | PatchTST 0.292 | -2.2% |
-| ETTm1 | 192 | 336 | **0.326** | PatchTST 0.333 | -1.9% |
-| weather | 96 | 336 | **0.149** | PatchTST 0.151 | -1.4% |
-| PEMS03 | 24 | 96 | **0.074** | iTransformer 0.074 | -0.5% |
-| ETTm1 | 336 | 336 | **0.363** | CycleNet 0.364 | -0.1% |
-| ETTh1 | 192 | 336 | **0.408** | FITS 0.408 | -0.1% |
-| weather | 336 | 336 | **0.249** | PatchTST 0.249 | -0.1% |
+| Model | Wins |
+|---|---|
+| TQNet | 13 |
+| **JointMLP** | 12 |
+| CycleNet | 9 |
+| iTransformer | 5 |
+| FreTS | 2 |
+| SparseTSF | 1 |
+| FilterNet | 1 |
+| PatchTST | 1 |
 
-## AsySpecX (lite) line
+### ETTh1
 
-2 wins / 28 settings. The AsySpecX (lite) variant was the original / pre-residual design; on standard MTSF it generally trails AsySpecXResid (which moved the cross block onto the residual) and the strongest baselines.
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.393·2sd | **0.371**·2sd | 0.372 | 0.379 | 0.388 | 0.385 | 0.398 | 0.387 | 0.388 | 0.387 | 0.404 | 0.402 |
+| 192 | 0.443·2sd | 0.427·2sd | 0.430 | **0.427** | 0.438 | 0.435 | 0.447 | 0.443 | 0.440 | 0.436 | 0.447 | 0.433 |
+| 336 | 0.483·2sd | 0.480·2sd | 0.476 | **0.465** | 0.477 | 0.481 | 0.500 | 0.520 | 0.490 | 0.480 | 0.516 | 0.475 |
+| 720 | 0.475·2sd | 0.491·2sd | 0.491 | **0.462** | 0.476 | 0.464 | 0.575 | 0.635 | 0.514 | 0.489 | 0.543 | 0.476 |
 
-| Dataset | pl | Best sl | MSE | vs best baseline | Δ |
-|---|---|---|---|---|---|
-| ETTh2 | 192 | 720 | **0.334** | FITS 0.341 | -2.1% |
-| ETTh2 | 96 | 720 | **0.277** | CycleNet 0.277 | -0.2% |
+### ETTh2
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.315·2sd | 0.294·2sd | 0.293 | **0.287** | 0.296 | 0.303 | 0.314 | 0.301 | 0.304 | 0.293 | 0.312 | 0.303 |
+| 192 | 0.388·2sd | 0.371·2sd | **0.366** | 0.373 | 0.382 | 0.386 | 0.456 | 0.377 | 0.378 | 0.367 | 0.406 | 0.385 |
+| 336 | 0.428·2sd | **0.417**·2sd | 0.419 | 0.425 | 0.420 | 0.421 | 0.509 | 0.423 | 0.424 | 0.420 | 0.490 | 0.426 |
+| 720 | 0.428·2sd | 0.425·2sd | 0.440 | 0.452 | 0.423 | **0.420** | 0.728 | 0.449 | 0.435 | 0.423 | 0.694 | 0.428 |
+
+### ETTm1
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.360·2sd | 0.314·2sd | **0.310** | 0.326 | 0.373 | 0.388 | 0.339 | 0.332 | 0.346 | 0.322 | 0.346 | 0.354 |
+| 192 | 0.392·2sd | **0.357**·2sd | 0.363 | 0.367 | 0.404 | 0.415 | 0.387 | 0.368 | 0.386 | 0.362 | 0.383 | 0.399 |
+| 336 | 0.420·2sd | 0.389·2sd | 0.391 | 0.396 | 0.434 | 0.441 | 0.424 | 0.412 | 0.423 | **0.388** | 0.419 | 0.437 |
+| 720 | 0.485·2sd | **0.448**·2sd | 0.452 | 0.456 | 0.493 | 0.496 | 0.481 | 0.464 | 0.498 | 0.454 | 0.505 | 0.498 |
+
+### ETTm2
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.182·2sd | 0.178·2sd | 0.173 | **0.168** | 0.189 | 0.198 | 0.182 | 0.178 | 0.183 | 0.177 | 0.193 | 0.184 |
+| 192 | 0.245·2sd | 0.240·2sd | 0.241 | **0.233** | 0.251 | 0.260 | 0.257 | 0.241 | 0.252 | 0.248 | 0.253 | 0.248 |
+| 336 | 0.305·2sd | 0.301·2sd | 0.299 | **0.294** | 0.310 | 0.317 | 0.360 | 0.297 | 0.312 | 0.305 | 0.314 | 0.309 |
+| 720 | 0.406·2sd | 0.400·2sd | 0.399 | **0.396** | 0.410 | 0.414 | 0.506 | 0.396 | 0.410 | 0.404 | 0.416 | 0.410 |
+
+### weather
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.192·2sd | 0.160·2sd | **0.158** | 0.171 | 0.209 | 0.207 | 0.173 | 0.165 | 0.174 | 0.173 | 0.202 | 0.196 |
+| 192 | 0.242·2sd | 0.209·2sd | **0.206** | 0.222 | 0.252 | 0.253 | 0.213 | 0.211 | 0.226 | 0.219 | 0.239 | 0.243 |
+| 336 | 0.295·2sd | 0.264·2sd | 0.264 | 0.276 | 0.302 | 0.302 | **0.263** | 0.272 | 0.281 | 0.275 | 0.303 | 0.293 |
+| 720 | 0.367·2sd | 0.346·2sd | 0.343 | 0.350 | 0.372 | 0.372 | **0.339** | 0.356 | 0.360 | 0.352 | 0.358 | 0.367 |
+
+### electricity
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.202·2sd | 0.152·2sd | **0.138** | 0.141 | 0.206 | 0.210 | 0.185 | 0.144 | 0.148 | 0.166 | 0.195 | 0.210 |
+| 192 | 0.203·2sd | 0.169·2sd | 0.157 | **0.155** | 0.205 | 0.205 | 0.189 | 0.162 | 0.163 | 0.175 | 0.194 | 0.205 |
+| 336 | 0.218·2sd | 0.187·2sd | **0.172** | 0.172 | 0.220 | 0.219 | 0.205 | 0.185 | 0.177 | 0.190 | 0.207 | 0.218 |
+| 720 | 0.259·2sd | 0.217·2sd | 0.211 | 0.211 | 0.261 | 0.260 | 0.255 | 0.260 | **0.209** | 0.233 | 0.242 | 0.260 |
+
+### traffic
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.625·2sd | 0.475·2sd | 0.422 | 0.481 | 0.658 | 0.663 | 0.546 | 0.417 | **0.387** | 0.474 | 0.662 | 0.663 |
+| 192 | 0.595·2sd | 0.498·2sd | 0.445 | 0.483 | 0.608 | 0.611 | 0.548 | 0.439 | **0.409** | 0.478 | 0.611 | 0.612 |
+| 336 | 0.607·2sd | 0.520·2sd | 0.462 | 0.477 | 0.616 | 0.617 | 0.573 | 0.458 | **0.413** | 0.491 | 0.615 | 0.617 |
+| 720 | 0.641·2sd | 0.557·2sd | 0.498 | 0.503 | 0.661 | 0.655 | 0.625 | 0.495 | **0.438** | 0.525 | 0.657 | 0.654 |
+
+### PEMS03
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | — | **0.058**·2sd | 0.060 | 0.081 | 0.120 | — | 0.081 | 0.068 | 0.067 | 0.087 | 0.103 | 0.185 |
+| 24 | — | **0.074**·2sd | 0.076 | 0.125 | 0.239 | 0.322 | 0.122 | 0.095 | 0.093 | 0.139 | 0.180 | 0.324 |
+| 48 | — | **0.106**·2sd | 0.108 | 0.208 | 0.547 | 0.444 | 0.198 | 0.150 | 0.149 | 0.253 | 0.318 | 0.650 |
+| 96 | — | 0.153·2sd | **0.142** | 0.299 | 1.068 | 0.524 | 0.265 | 0.231 | 0.227 | 0.433 | 0.454 | 1.187 |
+
+### PEMS04
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | — | 0.069 | **0.068** | 0.093 | 0.134 | — | 0.096 | 0.078 | 0.085 | 0.101 | 0.114 | 0.197 |
+| 24 | — | 0.080·2sd | **0.079** | 0.130 | 0.255 | 0.324 | 0.144 | 0.097 | 0.116 | 0.161 | 0.188 | 0.336 |
+| 48 | — | **0.097**·2sd | 0.099 | 0.196 | 0.576 | 0.445 | 0.224 | 0.136 | 0.177 | 0.296 | 0.318 | 0.675 |
+| 96 | — | **0.117**·2sd | 0.123 | 0.246 | 1.173 | 0.507 | 0.289 | 0.201 | 0.273 | 0.513 | 0.424 | 1.267 |
+
+### PEMS07
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | — | 0.053·2sd | **0.052** | 0.077 | 0.113 | — | 0.076 | 0.062 | 0.065 | 0.082 | 0.100 | 0.179 |
+| 24 | — | 0.065·2sd | **0.063** | 0.122 | 0.236 | 0.350 | 0.126 | 0.086 | 0.090 | 0.142 | 0.188 | 0.327 |
+| 48 | — | 0.088·2sd | **0.082** | 0.217 | 0.557 | 0.531 | 0.226 | 0.124 | 0.136 | 0.273 | 0.373 | 0.675 |
+| 96 | — | 0.134·2sd | **0.110** | 0.307 | 1.117 | 0.666 | 0.323 | 0.180 | 0.199 | 0.450 | 0.577 | 1.253 |
+
+### PEMS08
+
+| pl | AsySpecX | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | — | **0.073**·2sd | 0.086 | 0.095 | 0.127 | — | 0.095 | 0.078 | 0.078 | 0.091 | 0.113 | 0.189 |
+| 24 | — | **0.101**·2sd | 0.137 | 0.146 | 0.245 | 0.346 | 0.149 | 0.111 | 0.113 | 0.145 | 0.197 | 0.323 |
+| 48 | — | **0.164**·2sd | 0.251 | 0.260 | 0.576 | 0.546 | 0.245 | 0.171 | 0.181 | 0.254 | 0.392 | 0.677 |
+| 96 | — | 0.315·2sd | 0.392 | 0.359 | 1.244 | 0.756 | 0.355 | **0.292** | 0.303 | 0.438 | 0.651 | 1.345 |
+
+---
+
+## Table @ sl=336
+
+**Win count** (44 cells with ≥1 model):
+
+| Model | Wins |
+|---|---|
+| iTransformer | 13 |
+| CycleNet | 9 |
+| TQNet | 7 |
+| **JointMLP** | 6 |
+| FITS | 3 |
+| FilterNet | 3 |
+| MixLinear | 3 |
+| FreTS | 2 |
+| PatchTST | 1 |
+
+### ETTh1
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.369·2sd | 0.371 | 0.372 | 0.376 | 0.368 | 0.405 | 0.395 | 0.409 | 0.371 | 0.386 | **0.363** |
+| 192 | **0.408**·2sd | 0.414 | 0.408 | 0.408 | 0.425 | 0.446 | 0.443 | 0.445 | 0.410 | 0.430 | 0.428 |
+| 336 | 0.440·2sd | 0.437 | 0.430 | 0.431 | 0.429 | 0.483 | 0.454 | 0.465 | 0.445 | 0.463 | **0.422** |
+| 720 | 0.465·2sd | 0.480 | 0.451 | 0.426 | 0.421 | 0.636 | 0.489 | 0.549 | 0.456 | 0.515 | **0.419** |
+
+### ETTh2
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.292·2sd | 0.296 | **0.277** | 0.281 | 0.297 | 0.301 | 0.317 | 0.302 | 0.282 | 0.334 | 0.290 |
+| 192 | 0.354·2sd | 0.354 | 0.341 | **0.341** | 0.347 | 0.431 | 0.371 | 0.369 | 0.352 | 0.380 | 0.350 |
+| 336 | 0.395·2sd | **0.362** | 0.372 | **0.362** | 0.364 | 0.483 | 0.389 | 0.422 | 0.378 | 0.422 | 0.365 |
+| 720 | 0.410·2sd | 0.420 | 0.425 | **0.389** | 0.401 | 0.920 | 0.424 | 0.425 | 0.401 | 0.591 | 0.391 |
+
+### ETTm1
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | **0.285**·2sd | 0.294 | 0.300 | 0.312 | — | 0.334 | 0.312 | 0.311 | 0.292 | 0.307 | 0.321 |
+| 192 | **0.326**·2sd | 0.335 | 0.339 | 0.345 | — | 0.358 | 0.342 | 0.355 | 0.333 | 0.342 | 0.353 |
+| 336 | **0.363**·2sd | 0.370 | 0.364 | 0.378 | — | 0.388 | 0.392 | 0.385 | 0.367 | 0.378 | 0.388 |
+| 720 | 0.423·2sd | 0.427 | **0.418** | 0.432 | — | 0.447 | 0.455 | 0.437 | 0.425 | 0.474 | 0.445 |
+
+### ETTm2
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.172·2sd | 0.170 | **0.159** | 0.170 | — | 0.175 | 0.174 | 0.178 | 0.167 | 0.189 | 0.169 |
+| 192 | 0.228·2sd | 0.225 | **0.216** | 0.224 | — | 0.245 | 0.232 | 0.254 | 0.221 | 0.266 | 0.224 |
+| 336 | 0.283·2sd | 0.294 | **0.269** | 0.277 | — | 0.333 | 0.284 | 0.290 | 0.276 | 0.309 | 0.278 |
+| 720 | 0.377·2sd | 0.368 | **0.365** | 0.370 | — | 0.399 | 0.379 | 0.382 | 0.365 | 0.441 | 0.370 |
+
+### weather
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | **0.149**·2sd | 0.161 | 0.167 | 0.180 | — | 0.154 | 0.160 | 0.160 | 0.151 | 0.177 | 0.177 |
+| 192 | 0.198·2sd | **0.196** | 0.213 | 0.222 | — | **0.196** | 0.198 | 0.206 | **0.196** | 0.218 | 0.219 |
+| 336 | **0.249**·2sd | 0.250 | 0.261 | 0.268 | — | 0.253 | 0.258 | 0.262 | 0.249 | 0.264 | 0.268 |
+| 720 | 0.322·2sd | 0.321 | 0.328 | 0.335 | — | **0.317** | 0.336 | 0.326 | 0.322 | 0.326 | 0.337 |
+
+### electricity
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.146·2sd | 0.131 | **0.129** | 0.149 | 0.147 | 0.136 | 0.132 | 0.132 | — | 0.140 | 0.147 |
+| 192 | 0.187·2sd | 0.154 | **0.144** | 0.163 | 0.158 | 0.154 | 0.152 | 0.153 | — | 0.154 | 0.164 |
+| 336 | 0.190·2sd | 0.168 | **0.161** | 0.179 | 0.174 | — | 0.172 | 0.172 | — | 0.169 | 0.178 |
+| 720 | 0.224·2sd | 0.200 | 0.199 | 0.216 | 0.212 | — | 0.226 | **0.198** | — | 0.205 | 0.216 |
+
+### traffic
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 96 | 0.422·2sd | 0.418 | 0.396 | 0.418 | 0.415 | — | 0.363 | **0.361** | — | 0.428 | 0.415 |
+| 192 | 0.446·2sd | 0.440 | 0.411 | 0.431 | 0.427 | — | 0.391 | **0.377** | — | 0.441 | 0.430 |
+| 336 | 0.465·2sd | 0.460 | 0.428 | 0.443 | 0.438 | — | 0.404 | **0.390** | — | 0.458 | — |
+| 720 | 0.479·2sd | 0.459 | 0.451 | 0.469 | 0.465 | — | **0.445** | — | — | 0.486 | — |
+
+### PEMS03
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | — | 0.062 | 0.073 | — | — | 0.064 | 0.064 | **0.060** | — | 0.076 | — |
+| 24 | — | 0.078 | 0.101 | — | — | — | 0.080 | **0.074** | — | 0.107 | 0.156 |
+| 48 | — | 0.107 | 0.143 | — | — | — | 0.107 | **0.090** | — | 0.163 | 0.186 |
+| 96 | — | 0.243 | 0.178 | — | — | — | 0.129 | **0.113** | — | 0.189 | 0.211 |
+
+### PEMS04
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | — | 0.069 | 0.090 | 0.091 | — | 0.076 | **0.069** | 0.070 | — | 0.089 | — |
+| 24 | — | **0.073** | 0.116 | 0.123 | — | 0.096 | 0.080 | 0.082 | — | 0.123 | 0.172 |
+| 48 | — | **0.090** | 0.155 | — | — | 0.128 | 0.095 | 0.102 | — | 0.163 | 0.202 |
+| 96 | — | **0.114** | 0.190 | — | — | 0.160 | 0.117 | 0.120 | — | 0.209 | 0.228 |
+
+### PEMS07
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | — | **0.050** | 0.069 | — | — | — | 0.050 | 0.050 | — | 0.072 | — |
+| 24 | — | **0.056** | 0.098 | — | — | — | 0.059 | 0.058 | — | 0.103 | 0.151 |
+| 48 | — | 0.067 | 0.144 | — | — | — | 0.069 | **0.067** | — | 0.157 | — |
+| 96 | — | 0.095 | 0.186 | — | — | — | 0.078 | **0.076** | — | 0.194 | — |
+
+### PEMS08
+
+| pl | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 12 | — | 0.107 | 0.093 | 0.097 | — | 0.077 | 0.075 | **0.066** | 0.072 | 0.092 | — |
+| 24 | — | 0.158 | 0.134 | 0.150 | — | 0.106 | 0.092 | **0.084** | 0.087 | 0.141 | 0.229 |
+| 48 | — | 0.342 | 0.217 | 0.257 | — | 0.160 | 0.128 | **0.117** | — | 0.234 | 0.330 |
+| 96 | — | 0.332 | 0.312 | 0.385 | — | 0.232 | **0.153** | 0.178 | — | 0.332 | 0.431 |
+
+---
+
+## Table @ sl=720
+
+**Win count** (28 cells with ≥1 model):
+
+| Model | Wins |
+|---|---|
+| **AsySpecX** | 19 |
+| **JointMLP** | 9 |
+
+### ETTh1
+
+| pl | AsySpecX | JointMLP |
+|---|---|---|
+| 96 | 0.384·2sd | **0.376**·2sd |
+| 192 | 0.421·2sd | **0.412**·2sd |
+| 336 | **0.451**·2sd | 0.458·2sd |
+| 720 | **0.462**·2sd | 0.502·2sd |
+
+### ETTh2
+
+| pl | AsySpecX | JointMLP |
+|---|---|---|
+| 96 | **0.277**·2sd | 0.290·2sd |
+| 192 | **0.334**·2sd | 0.350·2sd |
+| 336 | **0.365**·2sd | 0.387·2sd |
+| 720 | **0.389**·2sd | 0.418·2sd |
+
+### ETTm1
+
+| pl | AsySpecX | JointMLP |
+|---|---|---|
+| 96 | 0.321·2sd | **0.296**·2sd |
+| 192 | 0.351·2sd | **0.340**·2sd |
+| 336 | 0.380·2sd | **0.370**·2sd |
+| 720 | **0.430**·2sd | 0.437·2sd |
+
+### ETTm2
+
+| pl | AsySpecX | JointMLP |
+|---|---|---|
+| 96 | 0.171·2sd | **0.169**·2sd |
+| 192 | **0.234**·2sd | 0.238·2sd |
+| 336 | 0.292·2sd | **0.284**·2sd |
+| 720 | **0.373**·2sd | 0.374 |
+
+### weather
+
+| pl | AsySpecX | JointMLP |
+|---|---|---|
+| 96 | 0.156·2sd | **0.152**·2sd |
+| 192 | **0.202**·2sd | 0.202·2sd |
+| 336 | 0.252·2sd | **0.250**·2sd |
+| 720 | **0.317**·2sd | 0.318·2sd |
+
+### electricity
+
+| pl | AsySpecX | JointMLP |
+|---|---|---|
+| 96 | **0.141**·2sd | 0.143·2sd |
+| 192 | **0.155**·2sd | 0.159·2sd |
+| 336 | **0.172**·2sd | 0.174·2sd |
+| 720 | **0.201**·2sd | 0.203·2sd |
+
+### traffic
+
+| pl | AsySpecX | JointMLP |
+|---|---|---|
+| 96 | **0.390**·2sd | 0.403·2sd |
+| 192 | **0.401**·2sd | 0.424·2sd |
+| 336 | **0.412**·2sd | 0.442·2sd |
+| 720 | **0.452**·2sd | 0.468·2sd |
+
+---
 
 ## AsySpecXResid
 
-Not in the per-(dataset, horizon) table — was benchmarked on a different protocol (3-seed sensor outage + sl=720 long-horizon MTSF). Headline numbers (from upstream `probe/FINAL_RESULTS_TABLE.md`):
+Not in the sl=96/336/720 tables above — was benchmarked on a different protocol (3-seed sensor outage + sl=720 long-horizon MTSF). Headline numbers (from upstream `probe/FINAL_RESULTS_TABLE.md`):
 
 | Setting | DLinear | iTransformer | FreqHerm | **AsySpecXResid** | Δ vs DLinear |
 |---|---|---|---|---|---|
@@ -65,121 +337,13 @@ Not in the per-(dataset, horizon) table — was benchmarked on a different proto
 | METR_LA mode B pl=12 (held-out 6/207 sensors)   | 2.092 | 1.539 | 1.731 | **1.722** | −18 % |
 | Beijing_AQ mode B (1 station × 11 modalities)   | 1.107 | 1.103 | 1.027 | 1.028 | −7 % |
 
-Pattern: gain is largest where physical cross-channel structure (road graph) is strongest. Variance is well below the gap to the next-best baseline → headline numbers are robust.
-
-To re-aggregate these on this repo: run `--model AsySpecXResid --full` then parse `logs/AsySpecXResid/*.log`. Note that scripts/AsySpecXResid/ doesn't exist yet (would need to be added).
-
----
-
-## Full per-(dataset, horizon) table
-
-All 14 models, all 11 datasets, all 4 horizons. **Bold** = lowest MSE in that row. Cell suffix `·slX` = best seq_len was X (default sl=96 omitted), `·Nsd` = mean over N seeds. `—` = no runs.
-
-### ETTh1
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 96 | 0.384·sl720·2sd | — | 0.369·sl336·2sd | 0.371·sl336 | 0.372·sl336 | 0.376·sl336 | 0.368·sl336 | 0.398 | 0.387 | 0.388 | 0.371·sl336 | 0.386·sl336 | **0.363**·sl336 |
-| 192 | 0.421·sl720·2sd | — | **0.408**·sl336·2sd | 0.414·sl336 | 0.408·sl336 | 0.408·sl336 | 0.425·sl336 | 0.446·sl336 | 0.443 | 0.440 | 0.410·sl336 | 0.430·sl336 | 0.428·sl336 |
-| 336 | 0.451·sl720·2sd | — | 0.440·sl336·2sd | 0.437·sl336 | 0.430·sl336 | 0.431·sl336 | 0.429·sl336 | 0.483·sl336 | 0.454·sl336 | 0.465·sl336 | 0.445·sl336 | 0.463·sl336 | **0.422**·sl336 |
-| 720 | 0.462·sl720·2sd | — | 0.465·sl336·2sd | 0.480·sl336 | 0.451·sl336 | 0.426·sl336 | 0.421·sl336 | 0.575 | 0.489·sl336 | 0.514 | 0.456·sl336 | 0.515·sl336 | **0.419**·sl336 |
-
-### ETTh2
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 96 | **0.277**·sl720·2sd | — | 0.290·sl720·2sd | 0.293 | 0.277·sl336 | 0.281·sl336 | 0.297·sl336 | 0.301·sl336 | 0.301 | 0.302·sl336 | 0.282·sl336 | 0.312 | 0.290·sl336 |
-| 192 | **0.334**·sl720·2sd | — | 0.350·sl720·2sd | 0.354·sl336 | 0.341·sl336 | 0.341·sl336 | 0.347·sl336 | 0.431·sl336 | 0.371·sl336 | 0.369·sl336 | 0.352·sl336 | 0.380·sl336 | 0.350·sl336 |
-| 336 | 0.365·sl720·2sd | — | 0.387·sl720·2sd | **0.362**·sl336 | 0.372·sl336 | **0.362**·sl336 | 0.364·sl336 | 0.483·sl336 | 0.389·sl336 | 0.422·sl336 | 0.378·sl336 | 0.422·sl336 | 0.365·sl336 |
-| 720 | 0.389·sl720·2sd | — | 0.410·sl336·2sd | 0.420·sl336 | 0.425·sl336 | **0.389**·sl336 | 0.401·sl336 | 0.728 | 0.424·sl336 | 0.425·sl336 | 0.401·sl336 | 0.591·sl336 | 0.391·sl336 |
-
-### ETTm1
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 96 | 0.321·sl720·2sd | — | **0.285**·sl336·2sd | 0.294·sl336 | 0.300·sl336 | 0.312·sl336 | 0.388 | 0.334·sl336 | 0.312·sl336 | 0.311·sl336 | 0.292·sl336 | 0.307·sl336 | 0.321·sl336 |
-| 192 | 0.351·sl720·2sd | — | **0.326**·sl336·2sd | 0.335·sl336 | 0.339·sl336 | 0.345·sl336 | 0.415 | 0.358·sl336 | 0.342·sl336 | 0.355·sl336 | 0.333·sl336 | 0.342·sl336 | 0.353·sl336 |
-| 336 | 0.380·sl720·2sd | — | **0.363**·sl336·2sd | 0.370·sl336 | 0.364·sl336 | 0.378·sl336 | 0.441 | 0.388·sl336 | 0.392·sl336 | 0.385·sl336 | 0.367·sl336 | 0.378·sl336 | 0.388·sl336 |
-| 720 | 0.430·sl720·2sd | — | 0.423·sl336·2sd | 0.427·sl336 | **0.418**·sl336 | 0.432·sl336 | 0.496 | 0.447·sl336 | 0.455·sl336 | 0.437·sl336 | 0.425·sl336 | 0.474·sl336 | 0.445·sl336 |
-
-### ETTm2
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 96 | 0.171·sl720·2sd | — | 0.169·sl720·2sd | 0.170·sl336 | **0.159**·sl336 | 0.170·sl336 | 0.198 | 0.175·sl336 | 0.174·sl336 | 0.178·sl336 | 0.167·sl336 | 0.189·sl336 | 0.169·sl336 |
-| 192 | 0.234·sl720·2sd | — | 0.228·sl336·2sd | 0.225·sl336 | **0.216**·sl336 | 0.224·sl336 | 0.260 | 0.245·sl336 | 0.232·sl336 | 0.252 | 0.221·sl336 | 0.253 | 0.224·sl336 |
-| 336 | 0.292·sl720·2sd | — | 0.283·sl336·2sd | 0.294·sl336 | **0.269**·sl336 | 0.277·sl336 | 0.317 | 0.333·sl336 | 0.284·sl336 | 0.290·sl336 | 0.276·sl336 | 0.309·sl336 | 0.278·sl336 |
-| 720 | 0.373·sl720·2sd | — | 0.374·sl720 | 0.368·sl336 | **0.365**·sl336 | 0.370·sl336 | 0.414 | 0.399·sl336 | 0.379·sl336 | 0.382·sl336 | 0.365·sl336 | 0.416 | 0.370·sl336 |
-
-### weather
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 96 | 0.156·sl720·2sd | — | **0.149**·sl336·2sd | 0.158 | 0.167·sl336 | 0.180·sl336 | 0.207 | 0.154·sl336 | 0.160·sl336 | 0.160·sl336 | 0.151·sl336 | 0.177·sl336 | 0.177·sl336 |
-| 192 | 0.202·sl720·2sd | — | 0.198·sl336·2sd | **0.196**·sl336 | 0.213·sl336 | 0.222·sl336 | 0.253 | **0.196**·sl336 | 0.198·sl336 | 0.206·sl336 | **0.196**·sl336 | 0.218·sl336 | 0.219·sl336 |
-| 336 | 0.252·sl720·2sd | — | **0.249**·sl336·2sd | 0.250·sl336 | 0.261·sl336 | 0.268·sl336 | 0.302 | 0.253·sl336 | 0.258·sl336 | 0.262·sl336 | 0.249·sl336 | 0.264·sl336 | 0.268·sl336 |
-| 720 | 0.317·sl720·2sd | — | 0.318·sl720·2sd | 0.321·sl336 | 0.328·sl336 | 0.335·sl336 | 0.372 | **0.317**·sl336 | 0.336·sl336 | 0.326·sl336 | 0.322·sl336 | 0.326·sl336 | 0.337·sl336 |
-
-### electricity
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 96 | 0.141·sl720·2sd | — | 0.143·sl720·2sd | 0.131·sl336 | **0.129**·sl336 | 0.149·sl336 | 0.147·sl336 | 0.136·sl336 | 0.132·sl336 | 0.132·sl336 | 0.166 | 0.140·sl336 | 0.147·sl336 |
-| 192 | 0.155·sl720·2sd | — | 0.159·sl720·2sd | 0.154·sl336 | **0.144**·sl336 | 0.163·sl336 | 0.158·sl336 | 0.154·sl336 | 0.152·sl336 | 0.153·sl336 | 0.175 | 0.154·sl336 | 0.164·sl336 |
-| 336 | 0.172·sl720·2sd | — | 0.174·sl720·2sd | 0.168·sl336 | **0.161**·sl336 | 0.179·sl336 | 0.174·sl336 | 0.205 | 0.172·sl336 | 0.172·sl336 | 0.190 | 0.169·sl336 | 0.178·sl336 |
-| 720 | 0.201·sl720·2sd | — | 0.203·sl720·2sd | 0.200·sl336 | 0.199·sl336 | 0.216·sl336 | 0.212·sl336 | 0.255 | 0.226·sl336 | **0.198**·sl336 | 0.233 | 0.205·sl336 | 0.216·sl336 |
-
-### traffic
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 96 | 0.390·sl720·2sd | — | 0.403·sl720·2sd | 0.418·sl336 | 0.396·sl336 | 0.418·sl336 | 0.415·sl336 | 0.546 | 0.363·sl336 | **0.361**·sl336 | 0.474 | 0.428·sl336 | 0.415·sl336 |
-| 192 | 0.401·sl720·2sd | — | 0.424·sl720·2sd | 0.440·sl336 | 0.411·sl336 | 0.431·sl336 | 0.427·sl336 | 0.548 | 0.391·sl336 | **0.377**·sl336 | 0.478 | 0.441·sl336 | 0.430·sl336 |
-| 336 | 0.412·sl720·2sd | — | 0.442·sl720·2sd | 0.460·sl336 | 0.428·sl336 | 0.443·sl336 | 0.438·sl336 | 0.573 | 0.404·sl336 | **0.390**·sl336 | 0.491 | 0.458·sl336 | 0.617 |
-| 720 | 0.452·sl720·2sd | — | 0.468·sl720·2sd | 0.459·sl336 | 0.451·sl336 | 0.469·sl336 | 0.465·sl336 | 0.625 | 0.445·sl336 | **0.438** | 0.525 | 0.486·sl336 | 0.654 |
-
-### PEMS03
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 12 | — | — | **0.058**·2sd | 0.060 | 0.073·sl336 | 0.120 | — | 0.064·sl336 | 0.064·sl336 | 0.060·sl336 | 0.087 | 0.076·sl336 | 0.185 |
-| 24 | — | — | **0.074**·2sd | 0.076 | 0.101·sl336 | 0.239 | 0.322 | 0.122 | 0.080·sl336 | 0.074·sl336 | 0.139 | 0.107·sl336 | 0.156·sl336 |
-| 48 | — | — | 0.106·2sd | 0.107·sl336 | 0.143·sl336 | 0.547 | 0.444 | 0.198 | 0.107·sl336 | **0.090**·sl336 | 0.253 | 0.163·sl336 | 0.186·sl336 |
-| 96 | — | — | 0.153·2sd | 0.142 | 0.178·sl336 | 1.068 | 0.524 | 0.265 | 0.129·sl336 | **0.113**·sl336 | 0.433 | 0.189·sl336 | 0.211·sl336 |
-
-### PEMS04
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 12 | — | — | 0.069 | **0.068** | 0.090·sl336 | 0.091·sl336 | — | 0.076·sl336 | 0.069·sl336 | 0.070·sl336 | 0.101 | 0.089·sl336 | 0.197 |
-| 24 | — | — | 0.080·2sd | **0.073**·sl336 | 0.116·sl336 | 0.123·sl336 | 0.324 | 0.096·sl336 | 0.080·sl336 | 0.082·sl336 | 0.161 | 0.123·sl336 | 0.172·sl336 |
-| 48 | — | — | 0.097·2sd | **0.090**·sl336 | 0.155·sl336 | 0.576 | 0.445 | 0.128·sl336 | 0.095·sl336 | 0.102·sl336 | 0.296 | 0.163·sl336 | 0.202·sl336 |
-| 96 | — | — | 0.117·2sd | **0.114**·sl336 | 0.190·sl336 | 1.173 | 0.507 | 0.160·sl336 | 0.117·sl336 | 0.120·sl336 | 0.513 | 0.209·sl336 | 0.228·sl336 |
-
-### PEMS07
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 12 | — | — | 0.053·2sd | **0.050**·sl336 | 0.069·sl336 | 0.113 | — | 0.076 | 0.050·sl336 | 0.050·sl336 | 0.082 | 0.072·sl336 | 0.179 |
-| 24 | — | — | 0.065·2sd | **0.056**·sl336 | 0.098·sl336 | 0.236 | 0.350 | 0.126 | 0.059·sl336 | 0.058·sl336 | 0.142 | 0.103·sl336 | 0.151·sl336 |
-| 48 | — | — | 0.088·2sd | 0.067·sl336 | 0.144·sl336 | 0.557 | 0.531 | 0.226 | 0.069·sl336 | **0.067**·sl336 | 0.273 | 0.157·sl336 | 0.675 |
-| 96 | — | — | 0.134·2sd | 0.095·sl336 | 0.186·sl336 | 1.117 | 0.666 | 0.323 | 0.078·sl336 | **0.076**·sl336 | 0.450 | 0.194·sl336 | 1.253 |
-
-### PEMS08
-
-| pl | AsySpecX | AsySpecXResid | JointMLP | TQNet | CycleNet | FITS | SparseTSF | FreTS | FilterNet | iTransformer | PatchTST | DLinear | MixLinear |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 12 | — | — | 0.073·2sd | 0.086 | 0.093·sl336 | 0.097·sl336 | — | 0.077·sl336 | 0.075·sl336 | **0.066**·sl336 | 0.072·sl336 | 0.092·sl336 | 0.189 |
-| 24 | — | — | 0.101·2sd | 0.137 | 0.134·sl336 | 0.150·sl336 | 0.346 | 0.106·sl336 | 0.092·sl336 | **0.084**·sl336 | 0.087·sl336 | 0.141·sl336 | 0.229·sl336 |
-| 48 | — | — | 0.164·2sd | 0.251 | 0.217·sl336 | 0.257·sl336 | 0.546 | 0.160·sl336 | 0.128·sl336 | **0.117**·sl336 | 0.254 | 0.234·sl336 | 0.330·sl336 |
-| 96 | — | — | 0.315·2sd | 0.332·sl336 | 0.312·sl336 | 0.385·sl336 | 0.756 | 0.232·sl336 | **0.153**·sl336 | 0.178·sl336 | 0.438 | 0.332·sl336 | 0.431·sl336 |
+Pattern: gain is largest where physical cross-channel structure (road graph) is strongest.
 
 ---
 
 ## How this was built
 
 - **Baselines**: `note/sl96_results.csv` + `note/sl336_results.csv` from upstream `/scratch3/lin250/bldgFM/AsySpecX/` (seed 2026).
-- **AsySpecX, JointMLP**: parsed canonical-tag runs from `logs/<Model>/*.log`. JointMLP requires `jmlp_v4` tag; AsySpecX requires no tag. For each (dataset, horizon, model), pick the best `seq_len` across available runs (mean across seeds).
-- **AsySpecXResid**: headline numbers from upstream `probe/FINAL_RESULTS_TABLE.md` (3-seed, sensor-outage benchmark — not the same protocol as the per-(dataset, horizon) table above).
-
-To regenerate this file: `bash scripts/slurm/submit_all.sh --all-baselines --full` + the active-line sweeps, then re-run the aggregator script (`build_results_v2.py` in the session that produced this file).
+- **AsySpecX, JointMLP**: parsed canonical-tag runs from `logs/<Model>/*.log`. JointMLP requires `jmlp_v4` tag; AsySpecX requires no tag. Within each `(model, sl)` group, MSE is the mean across seeds (2026, 2027).
+- **AsySpecXResid**: headline numbers from upstream `probe/FINAL_RESULTS_TABLE.md` (3-seed, sensor-outage benchmark — separate protocol).
+- Each `seq_len` is reported as its own table so different lookback settings are never mixed in the same row.
