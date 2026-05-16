@@ -260,6 +260,24 @@ apply_asyspecx_overrides() {
     if [ "$cut_freq" -le 1 ]; then cut_freq=2; fi
 }
 
+# JointMLP (JA v4) overrides — rank adapts to channel count.
+# Rationale: cross-channel coupling on high-C datasets has effective rank ≈ 2
+# (road-graph clusters / building archetypes / PEMS topology), so rank=8 is
+# both wasteful and harder to optimize (gradient signal diluted across unused
+# directions). Low-C datasets (ETT/weather) have full-rank semantic channels,
+# so rank=8 ≈ dense and is the right default.
+# Exposes: jmlp_rank. Other JMLP_* knobs stay at their defaults in _template.sh.
+apply_jmlp_overrides() {
+    local ds=$1
+    case "$ds" in
+        electricity|traffic|PEMS*|Beijing-Air72|Beijing-Air132)
+            jmlp_rank=2 ;;
+        ETTh1|ETTh2|ETTm1|ETTm2|weather|Beijing-PM25|exchange_rate|illness)
+            jmlp_rank=8 ;;
+        *)  jmlp_rank=8 ;;
+    esac
+}
+
 # MixLinear paper-aligned overrides — per-dataset period_len/alpha/lpf.
 # Source: github.com/aitianma/MixLinear/scripts/MixLinear/*.sh
 apply_mixlinear_overrides() {

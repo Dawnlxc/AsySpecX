@@ -6,6 +6,7 @@ set -euo pipefail
 cd "$(cd -- "$(dirname -- "$0")/../.." && pwd)"
 source scripts/_common.sh
 load_dataset "${DATASET_KEY:?DATASET_KEY must be set}"
+apply_jmlp_overrides "$data_key"   # sets jmlp_rank per (high-C / low-C) class
 
 MODEL=JointMLP
 SEEDS=(2026 2027)
@@ -15,7 +16,7 @@ TAG=${TAG:-jav4}
 # Defaults match jmlp_v4.sbatch (production launcher for JA v4).
 JMLP_WINDOW=${JMLP_WINDOW:--1}          # -1 → _auto_window(seq_len)
 JMLP_STRIDE=${JMLP_STRIDE:--1}          # -1 → W//2
-JMLP_RANK=${JMLP_RANK:-8}
+JMLP_RANK=${JMLP_RANK:-$jmlp_rank}      # high-C → 2, low-C → 8 (apply_jmlp_overrides)
 JMLP_DELTA_HIDDEN=${JMLP_DELTA_HIDDEN:-64}
 JMLP_GATE_INIT=${JMLP_GATE_INIT:--1.0}
 JMLP_USE_ENTROPY_GATE=${JMLP_USE_ENTROPY_GATE:-1}
