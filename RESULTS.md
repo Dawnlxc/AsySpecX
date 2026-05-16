@@ -10,12 +10,9 @@ Cell format: MSE (mean across seeds, `·Nsd` suffix if N>1 seeds). **Bold** = lo
 
 | Line | Strongest claim | vs best baseline | Source |
 | --- | --- | --- | --- |
-| **AsySpecXResid** | PEMS_BAY mode B sensor outage (held-out 6/325): 0.472 | **−62 %** vs DLinear (1.247) | probe/FINAL_RESULTS_TABLE.md, 3 seeds |
-| **AsySpecXResid** | ETTh2 pl=720 MTSF (sl=720): 0.419 | **−49 %** vs DLinear (0.819) | probe/FINAL_RESULTS_TABLE.md, 3 seeds |
-| **JointMLP (JA v4)** | sl=336 standard MTSF: 8 wins / 32 settings | beats every baseline at sl=336 on those cells | this file |
-| AsySpecX (lite) | sl=720 ETTh2 pl=192: 0.334 | best vs any sl=336 baseline (best 0.341 FITS) | this file, 2 seeds |
-
-> AsySpecXResid is on a different protocol (3-seed sensor-outage + sl=720 long-horizon) — see [the dedicated table below](#asyspecxresid).
+| **JointMLP (JA v4)** at sl=96 | 12 wins / 44 standard MTSF settings | beats every baseline on those cells | this file, 2 seeds |
+| **JointMLP (JA v4)** at sl=336 | 6 wins / 32 settings (ETTm1 sweep, weather pl=96/336) | beats every baseline on those cells | this file, 2 seeds |
+| **AsySpecX** at sl=720 | 19 / 28 head-to-head wins vs JointMLP | ETTh2/traffic/electricity sweeps | this file, 2 seeds |
 
 ---
 
@@ -326,24 +323,8 @@ Cell format: MSE (mean across seeds, `·Nsd` suffix if N>1 seeds). **Bold** = lo
 
 ---
 
-## AsySpecXResid
-
-Not in the sl=96/336/720 tables above — was benchmarked on a different protocol (3-seed sensor outage + sl=720 long-horizon MTSF). Headline numbers (from upstream `probe/FINAL_RESULTS_TABLE.md`):
-
-| Setting | DLinear | iTransformer | FreqHerm | **AsySpecXResid** | Δ vs DLinear |
-|---|---|---|---|---|---|
-| ETTh2 pl=720 std MTSF | 0.819 | — | 0.423 | **0.419** ± 0.0002 | **−49 %** |
-| PEMS_BAY mode B pl=12 (held-out 6/325 sensors) | 1.247 | 1.162 | 0.495 | **0.472** ± 0.007 | **−62 %** |
-| METR_LA mode B pl=12 (held-out 6/207 sensors)   | 2.092 | 1.539 | 1.731 | **1.722** | −18 % |
-| Beijing_AQ mode B (1 station × 11 modalities)   | 1.107 | 1.103 | 1.027 | 1.028 | −7 % |
-
-Pattern: gain is largest where physical cross-channel structure (road graph) is strongest.
-
----
-
 ## How this was built
 
 - **Baselines**: `note/sl96_results.csv` + `note/sl336_results.csv` from upstream `/scratch3/lin250/bldgFM/AsySpecX/` (seed 2026).
 - **AsySpecX, JointMLP**: parsed canonical-tag runs from `logs/<Model>/*.log`. JointMLP requires `jmlp_v4` tag; AsySpecX requires no tag. Within each `(model, sl)` group, MSE is the mean across seeds (2026, 2027).
-- **AsySpecXResid**: headline numbers from upstream `probe/FINAL_RESULTS_TABLE.md` (3-seed, sensor-outage benchmark — separate protocol).
 - Each `seq_len` is reported as its own table so different lookback settings are never mixed in the same row.

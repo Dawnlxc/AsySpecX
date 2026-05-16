@@ -2,7 +2,7 @@ from data_provider.data_factory import data_provider
 from exp.exp_basic import Exp_Basic
 from models import (
     # active research line
-    AsySpecX, AsySpecXResid,        # AsySpecX line
+    AsySpecX,                        # AsySpecX line
     JointMLP,                        # JointMLP / JA v4 line
     # baselines
     TQNet, CycleNet, DLinear, iTransformer, PatchTST,
@@ -35,7 +35,6 @@ class Exp_Main(Exp_Basic):
         model_dict = {
             # active research line
             'AsySpecX': AsySpecX,
-            'AsySpecXResid': AsySpecXResid,
             'JointMLP': JointMLP,
             # baselines
             'TQNet': TQNet,

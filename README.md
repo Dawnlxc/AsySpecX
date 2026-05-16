@@ -12,23 +12,17 @@ TQNet MLP backbone + frequency-conditioned JA cross-channel mixer (v4: per-bin p
 
 **Wins on standard MTSF**: 8 / 44 settings vs the 10 baselines (tied with TQNet and CycleNet for #2 baseline-or-active winner; iTransformer leads with 12). Strongest on `ETTm1` (sweeps pl ∈ {96, 192, 336}), `weather pl={96, 336}`, `PEMS03 pl={12, 24}`, `ETTh1 pl=192`. See [`RESULTS.md`](RESULTS.md#jointmlp-line--8-wins--44-settings).
 
-### 2. AsySpecX line  —  `models/AsySpecX.py` + `models/AsySpecXResid.py`
+### 2. AsySpecX  —  `models/AsySpecX.py`
 
 Asymmetric Spectral Transfer: low-rank `H = A diag(g_m) Bᵀ` with per-band gates, applied in the frequency domain. Paper in preparation.
 
-- **`AsySpecX.py`** — the original / lite variant. 1 standard-MTSF win (`ETTh2 pl=192`, sl=720).
-- **`AsySpecXResid.py`** — the paper-flagship variant: FITS-style self-predictor + Hermitian residual cross block. Documented wins on **two separate benchmarks** (not in our sl=96 standard MTSF table):
-  - **PEMS_BAY sensor outage** (mode B, held-out 6/325 sensors): **0.472 MSE — −62 % vs DLinear** (1.247). 3-seed verified, rel std 1.5 %.
-  - **ETTh2 pl=720 long-horizon MTSF** (sl=720): **0.419 MSE — −49 % vs DLinear** (0.819). 3-seed verified, rel std 0.05 %.
-
-Source: upstream `probe/FINAL_RESULTS_TABLE.md`.
+Best at long lookback (sl=720): wins **19 / 28** head-to-head cells against JointMLP on the standard MTSF suite — ETTh2 sweep (pl ∈ {96, 192, 336, 720}), traffic sweep, electricity sweep. At sl=96 it doesn't yet beat the strongest baselines.
 
 ## All models in the repo
 
 | Category | File | Status |
 | --- | --- | --- |
-| **Active — AsySpecX** | [`models/AsySpecX.py`](models/AsySpecX.py) | Original variant; 1 standard-MTSF win |
-| | [`models/AsySpecXResid.py`](models/AsySpecXResid.py) | Paper-flagship; **−62 % sensor outage**, **−49 % ETTh2 pl=720** |
+| **Active — AsySpecX** | [`models/AsySpecX.py`](models/AsySpecX.py) | Frequency-domain asymmetric spectral transfer; strongest at long lookback |
 | **Active — JointMLP** | [`models/JointMLP.py`](models/JointMLP.py) | TQNet MLP backbone + JA cross-channel |
 | | [`models/JointAxisTWCMv4.py`](models/JointAxisTWCMv4.py) | JA v4 backend imported by JointMLP |
 | **Baselines (10)** | `TQNet`, `CycleNet`, `DLinear`, `iTransformer`, `PatchTST`, `FITS`, `FreTS`, `FilterNet`, `SparseTSF`, `MixLinear` | Comparison reference |
@@ -38,7 +32,7 @@ Pick a model via `--model <Name>` (any key in `exp/exp_main.py::model_dict`).
 ## Layout
 
 ```
-models/                     14 model files (4 active + 10 baselines)
+models/                     13 model files (3 active + 10 baselines)
 exp/exp_main.py             shared train/eval loop; model_dict registers every model
 data_provider/              ETT / custom CSV / Solar / PEMS dataset loaders
 layers/                     shared layers (RevIN, attention families, embeddings, …)
