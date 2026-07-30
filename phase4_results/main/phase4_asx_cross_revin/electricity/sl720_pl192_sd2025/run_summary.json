@@ -1,0 +1,16 @@
+{
+  "arm": "phase4_asx_cross_revin",
+  "cut_freq": "181",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28338850",
+  "log_file": "logs/AsySpecX_phase4/phase4_asx_cross_revin_electricity_sl720_pl192_sd2025.log",
+  "mae": 0.25629502534866333,
+  "mse": 0.1564904749393463,
+  "periods": "24+168",
+  "pred_len": 192,
+  "seed": 2025,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1314016
+}

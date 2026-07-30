@@ -1,0 +1,6 @@
+selector,mse_mean,mae_mean,delta_vs_best_single_mse,delta_vs_oracle_mse,arm_counts
+unrestricted_mean,0.195153,0.264011,-0.000627302,0.00160421,phase5_asx_individual_revin:2;phase5_asx_period_multi:6
+unrestricted_last_segment,0.197953,0.267799,0.00217305,0.00440456,phase5_asx_cross_clip05:3;phase5_asx_individual_period:1;phase5_asx_period_multi:4
+unrestricted_segment_robust,0.196106,0.265371,0.000326479,0.00255799,phase5_asx_cross:2;phase5_asx_individual_revin:1;phase5_asx_period_multi:5
+unrestricted_margin_prefer_simple,0.195156,0.264032,-0.00062402,0.00160749,phase5_asx_cross:2;phase5_asx_individual_revin:2;phase5_asx_period_multi:4
+policy_family,0.193601,0.261789,-0.00217886,5.26458e-05,phase5_asx_individual_revin:4;phase5_asx_period_multi:4

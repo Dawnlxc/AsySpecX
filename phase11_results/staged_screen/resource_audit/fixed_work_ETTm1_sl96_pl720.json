@@ -1,0 +1,50 @@
+{
+  "base_profile": "ind_cycle_full",
+  "batch_size": 64,
+  "channels": 7,
+  "cut_freq": 7,
+  "cycle": 96,
+  "dataset": "ETTm1",
+  "device": "NVIDIA H100",
+  "inference_repeats": 50,
+  "pred_len": 720,
+  "rows": [
+    {
+      "arm": "fk_r8_cs",
+      "checkpoint": "checkpoints/phase11_staged_screen_0716v1_fk_r8_cs_ETTm1_sl96_pl720_cf7_sd2026_AsySpecX_ETTm1_ftM_sl96_pl720_cycle96_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 86.13134765625,
+      "inference_ms_per_batch": 1.998493280261755,
+      "inference_ratio_vs_stage_a": 1.0,
+      "n_param": 15318,
+      "peak_memory_ratio_vs_stage_a": 1.0,
+      "train_forward_backward_ms_per_batch": 6.131640402600169,
+      "train_ratio_vs_stage_a": 1.0
+    },
+    {
+      "arm": "fk_sm2_mode",
+      "checkpoint": "checkpoints/phase11_staged_screen_0716v1_fk_sm2_mode_ETTm1_sl96_pl720_cf7_sd2026_AsySpecX_ETTm1_ftM_sl96_pl720_cycle96_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 86.16943359375,
+      "inference_ms_per_batch": 2.134368121623993,
+      "inference_ratio_vs_stage_a": 1.0679886405944992,
+      "n_param": 15374,
+      "peak_memory_ratio_vs_stage_a": 1.000442184390891,
+      "train_forward_backward_ms_per_batch": 7.397148897871375,
+      "train_ratio_vs_stage_a": 1.2063898748423925
+    },
+    {
+      "arm": "fk_sm2_tail2",
+      "checkpoint": "checkpoints/phase11_staged_screen_0716v1_fk_sm2_tail2_ETTm1_sl96_pl720_cf7_sd2026_AsySpecX_ETTm1_ftM_sl96_pl720_cycle96_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 86.16943359375,
+      "inference_ms_per_batch": 2.0627593249082565,
+      "inference_ratio_vs_stage_a": 1.032157248303624,
+      "n_param": 15374,
+      "peak_memory_ratio_vs_stage_a": 1.000442184390891,
+      "train_forward_backward_ms_per_batch": 7.694357540458441,
+      "train_ratio_vs_stage_a": 1.2548611848137066
+    }
+  ],
+  "seq_len": 96,
+  "synthetic_only_no_dataset_read": true,
+  "train_repeats": 20,
+  "warmup": 5
+}

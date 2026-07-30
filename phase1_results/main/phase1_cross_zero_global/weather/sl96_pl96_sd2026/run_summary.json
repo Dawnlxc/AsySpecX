@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_cross_zero_global",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28296871",
+  "log_file": "logs/AsySpecX_phase1/phase1_cross_zero_global_weather_sl96_pl96_sd2026.log",
+  "mae": 0.25198766589164734,
+  "mse": 0.1977613866329193,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

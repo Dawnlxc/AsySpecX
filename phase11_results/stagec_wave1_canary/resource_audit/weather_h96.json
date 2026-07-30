@@ -1,0 +1,45 @@
+{
+  "base_profile": "ind_cycle_full",
+  "batch_size": 64,
+  "dataset": "weather",
+  "device": "NVIDIA H100",
+  "inference_repeats": 50,
+  "rows": [
+    {
+      "arm": "fk_r8_cs",
+      "checkpoint": "checkpoints/phase11_stagec_wave1_canary_0716v1_fk_r8_cs_weather_sl96_pl96_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl96_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 78.98486328125,
+      "inference_ms_per_batch": 3.7876609060913324,
+      "inference_ratio_vs_stage_a": 1.0,
+      "n_param": 20250,
+      "peak_memory_ratio_vs_stage_a": 1.0,
+      "train_forward_backward_ms_per_batch": 13.474423415027559,
+      "train_ratio_vs_stage_a": 1.0
+    },
+    {
+      "arm": "fk_sm2_mode",
+      "checkpoint": "checkpoints/phase11_stagec_wave1_canary_0716v1_fk_sm2_mode_weather_sl96_pl96_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl96_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 79.02294921875,
+      "inference_ms_per_batch": 3.820927059277892,
+      "inference_ratio_vs_stage_a": 1.008782769633116,
+      "n_param": 20306,
+      "peak_memory_ratio_vs_stage_a": 1.000482192864782,
+      "train_forward_backward_ms_per_batch": 14.731702767312527,
+      "train_ratio_vs_stage_a": 1.0933085827541065
+    },
+    {
+      "arm": "fk_sm4_ph4_h",
+      "checkpoint": "checkpoints/phase11_stagec_wave1_canary_0716v1_fk_sm4_ph4_h_weather_sl96_pl96_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl96_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 79.62939453125,
+      "inference_ms_per_batch": 3.8111245445907116,
+      "inference_ratio_vs_stage_a": 1.006194756891158,
+      "n_param": 20386,
+      "peak_memory_ratio_vs_stage_a": 1.0081601869424646,
+      "train_forward_backward_ms_per_batch": 15.58005795814097,
+      "train_ratio_vs_stage_a": 1.1562689903870076
+    }
+  ],
+  "synthetic_only_no_dataset_read": true,
+  "train_repeats": 20,
+  "warmup": 5
+}

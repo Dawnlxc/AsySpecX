@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_all_clip05",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28307653",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_all_clip05_electricity_sl720_pl192_sd2026.log",
+  "mae": 0.2572377920150757,
+  "mse": 0.15552397072315216,
+  "pred_len": 192,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

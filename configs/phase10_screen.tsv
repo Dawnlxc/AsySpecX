@@ -1,0 +1,27 @@
+# arm	dataset	seq_len	pred_len	seed	cut_freq
+ind	weather	96	96	2026	5
+ind	weather	96	336	2026	5
+ind	weather	96	96	2026	13
+ind	weather	96	336	2026	13
+ind	weather	96	96	2026	25
+ind	weather	96	336	2026	25
+ind_cycle_full	weather	96	96	2026	13
+ind_cycle_full	weather	96	336	2026	13
+ind_direct_res	weather	96	96	2026	13
+ind_direct_res	weather	96	336	2026	13
+ind_dlinear_res	weather	96	96	2026	13
+ind_dlinear_res	weather	96	336	2026	13
+ind	electricity	96	96	2026	25
+ind	electricity	96	336	2026	25
+ind_cycle_full	electricity	96	96	2026	25
+ind_cycle_full	electricity	96	336	2026	25
+ind_cycle_r8	electricity	96	96	2026	25
+ind_cycle_r8	electricity	96	336	2026	25
+ind_direct_res	electricity	96	96	2026	25
+ind_direct_res	electricity	96	336	2026	25
+ind_cycle_full_direct_res	electricity	96	96	2026	25
+ind_cycle_full_direct_res	electricity	96	336	2026	25
+period	electricity	720	96	2026	181
+period	electricity	720	336	2026	181
+period_cycle_full	electricity	720	96	2026	181
+period_cycle_full	electricity	720	336	2026	181

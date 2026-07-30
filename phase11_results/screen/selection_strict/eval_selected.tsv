@@ -1,0 +1,4 @@
+# arm	dataset	seq_len	pred_len	seed	cut_freq
+dense_direct	weather	96	720	2026	13
+fk_r8	weather	96	720	2026	13
+fk_r4	weather	96	720	2026	13

@@ -1,0 +1,10 @@
+# base_profile	arm	dataset	seq_len	pred_len	seed	cut_freq
+ind_cycle_full	anchor	weather	96	96	2026	13
+ind_cycle_full	fk_r8_cs	weather	96	96	2026	13
+ind_cycle_full	fk_sm2_mode	weather	96	96	2026	13
+ind_cycle_full	fk_sm4_ph4_h	weather	96	96	2026	13
+compact_period_cycle_full	anchor	electricity	504	96	2026	127
+compact_period_cycle_full	fk_r8_cs	electricity	504	96	2026	127
+compact_period_cycle_full	fk_sm2_mode	electricity	504	96	2026	127
+compact_period_cycle_full	fk_sm4_ph4_h	electricity	504	96	2026	127
+

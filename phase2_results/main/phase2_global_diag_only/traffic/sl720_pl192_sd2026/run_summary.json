@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_diag_only",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28306996",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_diag_only_traffic_sl720_pl192_sd2026.log",
+  "mae": 0.28345727920532227,
+  "mse": 0.4046666920185089,
+  "pred_len": 192,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

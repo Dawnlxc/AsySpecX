@@ -1,0 +1,2 @@
+dataset,seq_len,pred_len,train_ratio_vs_stage_a,inference_ratio_vs_stage_a,memory_ratio_vs_stage_a,parameter_ratio_vs_stage_a,passes_active_limits
+ETTm1,96,720,1.2548611848137066,1.032157248303624,1.000442184390891,1.0036558297427862,0

@@ -1,0 +1,31 @@
+{
+  "complex_trainable_numel": 170,
+  "config": {
+    "alpha": 0.5,
+    "dataset": "weather",
+    "enc_in": 21,
+    "latent_dim": 8,
+    "lpf": 1,
+    "model": "mixlinear",
+    "output": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baseline_2026_results/iclr26_baselines_0713v1/mixlinear/weather/mixlinear_weather_sl720_pl336_a0p5_lpf1/param_audit.json",
+    "period_len": 4,
+    "phase_attn_heads": 1,
+    "phase_encoder_hidden": 32,
+    "phase_layers": 1,
+    "phase_num_routers": 8,
+    "pred_len": 336,
+    "predictor_hidden": 64,
+    "repo": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baselines_2026/MixLinear",
+    "seq_len": 720
+  },
+  "dataset": "weather",
+  "model": "mixlinear",
+  "official_commit": "71b5db62e38b1cb108faa1e1d4687287b4568f3b",
+  "official_repo": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baselines_2026/MixLinear",
+  "pred_len": 336,
+  "seq_len": 720,
+  "total_numel": 455,
+  "trainable_numel": 455,
+  "trainable_real_scalar_equiv": 625,
+  "trainable_storage_bytes": 2500
+}

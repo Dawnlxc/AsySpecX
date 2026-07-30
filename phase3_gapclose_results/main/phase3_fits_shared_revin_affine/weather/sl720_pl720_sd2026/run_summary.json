@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_fits_shared_revin_affine",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28332004",
+  "log_file": "logs/AsySpecX_phase3/phase3_fits_shared_revin_affine_weather_sl720_pl720_sd2026.log",
+  "mae": 0.3382122218608856,
+  "mse": 0.32169097661972046,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.616508
+}

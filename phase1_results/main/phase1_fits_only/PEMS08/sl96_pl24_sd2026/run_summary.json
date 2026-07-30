@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_fits_only",
+  "dataset": "PEMS08",
+  "exit_code": 0,
+  "job_id": "28296832",
+  "log_file": "logs/AsySpecX_phase1/phase1_fits_only_PEMS08_sl96_pl24_sd2026.log",
+  "mae": 0.3282511532306671,
+  "mse": 0.23258331418037415,
+  "pred_len": 24,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

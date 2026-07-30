@@ -1,0 +1,10 @@
+{
+  "default": [
+    "phase6_asx_cross",
+    "phase6_asx_cross_clip05",
+    "phase6_asx_individual",
+    "phase6_asx_individual_revin",
+    "phase6_asx_period_multi",
+    "phase6_asx_individual_period"
+  ]
+}

@@ -1,0 +1,6 @@
+job_id	arm	dataset	seq_len	pred_len	seed	cut_freq
+DRY	dense_direct	weather	96	720	2026	13
+DRY	fk_sm4_mode	weather	96	720	2026	13
+DRY	fk_sm4_ph2_q	weather	96	720	2026	13
+DRY	fk_sm4_ph4_q	weather	96	720	2026	13
+DRY	fk_sm4_ph4_h	weather	96	720	2026	13

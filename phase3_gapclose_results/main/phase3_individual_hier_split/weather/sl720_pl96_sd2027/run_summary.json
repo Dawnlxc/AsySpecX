@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_individual_hier_split",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28331989",
+  "log_file": "logs/AsySpecX_phase3/phase3_individual_hier_split_weather_sl720_pl96_sd2027.log",
+  "mae": 0.2106081247329712,
+  "mse": 0.152951180934906,
+  "pred_len": 96,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.3791676
+}

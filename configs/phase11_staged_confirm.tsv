@@ -1,0 +1,17 @@
+# role	base_profile	arm	dataset	seq_len	pred_len	seed	cut_freq
+active	ind_cycle_full	fk_r8_cs	ETTm1	96	336	2024	7
+active	ind_cycle_full	fk_sm2_tail2	ETTm1	96	336	2024	7
+active	ind_cycle_full	fk_r8_cs	ETTm1	96	336	2025	7
+active	ind_cycle_full	fk_sm2_tail2	ETTm1	96	336	2025	7
+active	ind_cycle_full	fk_r8_cs	ETTm1	96	720	2024	7
+active	ind_cycle_full	fk_sm2_tail2	ETTm1	96	720	2024	7
+active	ind_cycle_full	fk_r8_cs	ETTm1	96	720	2025	7
+active	ind_cycle_full	fk_sm2_tail2	ETTm1	96	720	2025	7
+active	ind_cycle_full	fk_r8_cs	traffic	96	336	2024	25
+active	ind_cycle_full	fk_sm2_tail2	traffic	96	336	2024	25
+active	ind_cycle_full	fk_r8_cs	traffic	96	336	2025	25
+active	ind_cycle_full	fk_sm2_tail2	traffic	96	336	2025	25
+active	ind_cycle_full	fk_r8_cs	traffic	96	720	2024	25
+active	ind_cycle_full	fk_sm2_tail2	traffic	96	720	2024	25
+active	ind_cycle_full	fk_r8_cs	traffic	96	720	2025	25
+active	ind_cycle_full	fk_sm2_tail2	traffic	96	720	2025	25

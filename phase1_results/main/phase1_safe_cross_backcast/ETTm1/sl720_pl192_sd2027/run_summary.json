@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_safe_cross_backcast",
+  "dataset": "ETTm1",
+  "exit_code": 0,
+  "job_id": "28297060",
+  "log_file": "logs/AsySpecX_phase1/phase1_safe_cross_backcast_ETTm1_sl720_pl192_sd2027.log",
+  "mae": 0.37547096610069275,
+  "mse": 0.3465532660484314,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok"
+}

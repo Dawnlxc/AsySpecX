@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_self_band_gain_global",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28307444",
+  "log_file": "logs/AsySpecX_phase2/phase2_self_band_gain_global_weather_sl720_pl192_sd2026.log",
+  "mae": 0.259054958820343,
+  "mse": 0.2097533643245697,
+  "pred_len": 192,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

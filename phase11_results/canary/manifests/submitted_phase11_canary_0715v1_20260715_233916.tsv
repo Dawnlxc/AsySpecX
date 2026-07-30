@@ -1,0 +1,5 @@
+job_id	arm	dataset	seq_len	pred_len	seed	cut_freq
+28796441	anchor	weather	96	720	2026	13
+28796442	dense_direct	weather	96	720	2026	13
+28796443	fk_r8	weather	96	720	2026	13
+28796444	fk_r8_svd	weather	96	720	2026	13

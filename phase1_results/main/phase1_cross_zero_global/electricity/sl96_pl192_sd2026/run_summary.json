@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_cross_zero_global",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28296888",
+  "log_file": "logs/AsySpecX_phase1/phase1_cross_zero_global_electricity_sl96_pl192_sd2026.log",
+  "mae": 0.2919292747974396,
+  "mse": 0.20577207207679749,
+  "pred_len": 192,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

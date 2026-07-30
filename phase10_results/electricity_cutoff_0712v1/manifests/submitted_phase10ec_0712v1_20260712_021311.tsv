@@ -1,0 +1,5 @@
+job_id	arm	dataset	seq_len	pred_len	seed	cut_freq
+28661407	cross_cycle_full	electricity	720	96	2026	61
+28661408	cross_cycle_full	electricity	720	336	2026	61
+28661409	cross_cycle_full	electricity	720	96	2026	121
+28661410	cross_cycle_full	electricity	720	336	2026	121

@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_safe_cross_backcast",
+  "dataset": "PEMS08",
+  "exit_code": 0,
+  "job_id": "28297119",
+  "log_file": "logs/AsySpecX_phase1/phase1_safe_cross_backcast_PEMS08_sl96_pl12_sd2026.log",
+  "mae": 0.21331849694252014,
+  "mse": 0.102915458381176,
+  "pred_len": 12,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

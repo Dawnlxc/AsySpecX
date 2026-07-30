@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_cross_zero_global",
+  "dataset": "PEMS04",
+  "exit_code": 0,
+  "job_id": "28296920",
+  "log_file": "logs/AsySpecX_phase1/phase1_cross_zero_global_PEMS04_sl96_pl24_sd2026.log",
+  "mae": 0.2598985731601715,
+  "mse": 0.14632244408130646,
+  "pred_len": 24,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

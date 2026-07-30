@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_fits_only",
+  "dataset": "ETTh1",
+  "exit_code": 0,
+  "job_id": "28296752",
+  "log_file": "logs/AsySpecX_phase1/phase1_fits_only_ETTh1_sl96_pl336_sd2027.log",
+  "mae": 0.4569648504257202,
+  "mse": 0.48375943303108215,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

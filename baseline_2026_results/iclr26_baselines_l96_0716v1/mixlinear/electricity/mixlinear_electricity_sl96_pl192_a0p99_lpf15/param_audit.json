@@ -1,0 +1,31 @@
+{
+  "complex_trainable_numel": 46,
+  "config": {
+    "alpha": 0.99,
+    "dataset": "electricity",
+    "enc_in": 321,
+    "latent_dim": 8,
+    "lpf": 15,
+    "model": "mixlinear",
+    "output": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baseline_2026_results/iclr26_baselines_l96_0716v1/mixlinear/electricity/mixlinear_electricity_sl96_pl192_a0p99_lpf15/param_audit.json",
+    "period_len": 24,
+    "phase_attn_heads": 1,
+    "phase_encoder_hidden": 32,
+    "phase_layers": 1,
+    "phase_num_routers": 8,
+    "pred_len": 192,
+    "predictor_hidden": 64,
+    "repo": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baselines_2026/MixLinear",
+    "seq_len": 96
+  },
+  "dataset": "electricity",
+  "model": "mixlinear",
+  "official_commit": "71b5db62e38b1cb108faa1e1d4687287b4568f3b",
+  "official_repo": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baselines_2026/MixLinear",
+  "pred_len": 192,
+  "seq_len": 96,
+  "total_numel": 83,
+  "trainable_numel": 83,
+  "trainable_real_scalar_equiv": 129,
+  "trainable_storage_bytes": 516
+}

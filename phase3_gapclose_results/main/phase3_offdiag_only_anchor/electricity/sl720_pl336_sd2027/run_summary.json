@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_offdiag_only_anchor",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28332127",
+  "log_file": "logs/AsySpecX_phase3/phase3_offdiag_only_anchor_electricity_sl720_pl336_sd2027.log",
+  "mae": 0.27121251821517944,
+  "mse": 0.17166738212108612,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1468278
+}

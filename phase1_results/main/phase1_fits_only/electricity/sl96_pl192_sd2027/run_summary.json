@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_fits_only",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28296800",
+  "log_file": "logs/AsySpecX_phase1/phase1_fits_only_electricity_sl96_pl192_sd2027.log",
+  "mae": 0.2895110249519348,
+  "mse": 0.20546434819698334,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

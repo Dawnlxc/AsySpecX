@@ -1,0 +1,65 @@
+{
+  "batch_size": 64,
+  "device": "NVIDIA H100",
+  "inference_repeats": 50,
+  "rows": [
+    {
+      "arm": "dense_direct",
+      "checkpoint": "checkpoints/phase11_complex_screen_0716v1_dense_direct_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 134.7041015625,
+      "inference_ms_per_batch": 3.3829626406077296,
+      "inference_ratio_vs_dense": 1.0,
+      "n_param": 138306,
+      "peak_memory_ratio_vs_dense": 1.0,
+      "train_forward_backward_ms_per_batch": 13.370640901848674,
+      "train_ratio_vs_dense": 1.0
+    },
+    {
+      "arm": "fk_sm4_mode",
+      "checkpoint": "checkpoints/phase11_complex_screen_0716v1_fk_sm4_mode_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 129.748046875,
+      "inference_ms_per_batch": 3.5925870400387794,
+      "inference_ratio_vs_dense": 1.06196473969733,
+      "n_param": 75986,
+      "peak_memory_ratio_vs_dense": 0.9632078412608654,
+      "train_forward_backward_ms_per_batch": 14.704592499765567,
+      "train_ratio_vs_dense": 1.099767214429673
+    },
+    {
+      "arm": "fk_sm4_ph2_q",
+      "checkpoint": "checkpoints/phase11_complex_screen_0716v1_fk_sm4_ph2_q_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 130.46435546875,
+      "inference_ms_per_batch": 3.774057060945779,
+      "inference_ratio_vs_dense": 1.1156070763665873,
+      "n_param": 76002,
+      "peak_memory_ratio_vs_dense": 0.9685254862727187,
+      "train_forward_backward_ms_per_batch": 15.406501048710197,
+      "train_ratio_vs_dense": 1.15226346753356
+    },
+    {
+      "arm": "fk_sm4_ph4_q",
+      "checkpoint": "checkpoints/phase11_complex_screen_0716v1_fk_sm4_ph4_q_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 130.4697265625,
+      "inference_ms_per_batch": 4.046835660701618,
+      "inference_ratio_vs_dense": 1.1962401275512244,
+      "n_param": 76018,
+      "peak_memory_ratio_vs_dense": 0.9685653595481996,
+      "train_forward_backward_ms_per_batch": 15.346304050763138,
+      "train_ratio_vs_dense": 1.147761290084554
+    },
+    {
+      "arm": "fk_sm4_ph4_h",
+      "checkpoint": "checkpoints/phase11_complex_screen_0716v1_fk_sm4_ph4_h_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 130.4697265625,
+      "inference_ms_per_batch": 3.8151864206884056,
+      "inference_ratio_vs_dense": 1.1277648694349842,
+      "n_param": 76018,
+      "peak_memory_ratio_vs_dense": 0.9685653595481996,
+      "train_forward_backward_ms_per_batch": 15.353251752094366,
+      "train_ratio_vs_dense": 1.1482809137422552
+    }
+  ],
+  "synthetic_only_no_dataset_read": true,
+  "train_repeats": 20,
+  "warmup": 5
+}

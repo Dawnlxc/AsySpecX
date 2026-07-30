@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_split",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28307385",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_split_traffic_sl96_pl336_sd2027.log",
+  "mae": 0.4003603756427765,
+  "mse": 0.6736728549003601,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

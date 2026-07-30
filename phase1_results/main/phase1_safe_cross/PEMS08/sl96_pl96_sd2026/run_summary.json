@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_safe_cross",
+  "dataset": "PEMS08",
+  "exit_code": 0,
+  "job_id": "28297026",
+  "log_file": "logs/AsySpecX_phase1/phase1_safe_cross_PEMS08_sl96_pl96_sd2026.log",
+  "mae": 0.6978515982627869,
+  "mse": 0.8890551924705505,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

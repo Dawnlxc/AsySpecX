@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_offdiag_only",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28307087",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_offdiag_only_traffic_sl96_pl96_sd2026.log",
+  "mae": 0.39906150102615356,
+  "mse": 0.6551356911659241,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

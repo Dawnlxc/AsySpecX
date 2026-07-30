@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_all",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28307283",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_all_traffic_sl720_pl96_sd2026.log",
+  "mae": 0.27993524074554443,
+  "mse": 0.3901483714580536,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

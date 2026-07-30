@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_all",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28307266",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_all_electricity_sl96_pl720_sd2026.log",
+  "mae": 0.3368567228317261,
+  "mse": 0.2575066387653351,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

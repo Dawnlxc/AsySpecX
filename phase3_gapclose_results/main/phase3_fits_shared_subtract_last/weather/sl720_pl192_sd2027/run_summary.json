@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_fits_shared_subtract_last",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28332038",
+  "log_file": "logs/AsySpecX_phase3/phase3_fits_shared_subtract_last_weather_sl720_pl192_sd2027.log",
+  "mae": 0.2605664134025574,
+  "mse": 0.21271680295467377,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.4705565
+}

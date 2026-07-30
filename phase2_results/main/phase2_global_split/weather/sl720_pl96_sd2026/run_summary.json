@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_split",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28307155",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_split_weather_sl720_pl96_sd2026.log",
+  "mae": 0.2205001264810562,
+  "mse": 0.16243544220924377,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

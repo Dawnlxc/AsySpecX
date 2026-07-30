@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_anchor_sparse_period",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28332061",
+  "log_file": "logs/AsySpecX_phase3/phase3_anchor_sparse_period_electricity_sl720_pl96_sd2027.log",
+  "mae": 0.2390706092119217,
+  "mse": 0.1389194130897522,
+  "pred_len": 96,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1168248
+}

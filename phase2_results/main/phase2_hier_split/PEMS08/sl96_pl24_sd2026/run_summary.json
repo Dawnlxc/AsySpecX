@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_split",
+  "dataset": "PEMS08",
+  "exit_code": 0,
+  "job_id": "28307400",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_split_PEMS08_sl96_pl24_sd2026.log",
+  "mae": 0.25943824648857117,
+  "mse": 0.15151558816432953,
+  "pred_len": 24,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

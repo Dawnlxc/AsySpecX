@@ -1,0 +1,8 @@
+{
+  "advance_to_wave2": 0,
+  "cells": 5,
+  "complex_head_to_head_ok": 1,
+  "reason": "neither Stage-B candidate passed the frozen Wave-1 gate",
+  "selected_arm": null,
+  "test_metrics_used": false
+}

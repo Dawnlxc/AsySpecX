@@ -1,0 +1,10 @@
+# arm	dataset	seq_len	pred_len	seed	cut_freq
+fk_r8_cs	weather	96	720	2024	13
+fk_r8_cs	weather	96	720	2025	13
+fk_r8_cs	weather	96	720	2026	13
+fk_sm4_mode	weather	96	720	2024	13
+fk_sm4_mode	weather	96	720	2025	13
+fk_sm4_mode	weather	96	720	2026	13
+fk_sm2_mode	weather	96	720	2024	13
+fk_sm2_mode	weather	96	720	2025	13
+fk_sm2_mode	weather	96	720	2026	13

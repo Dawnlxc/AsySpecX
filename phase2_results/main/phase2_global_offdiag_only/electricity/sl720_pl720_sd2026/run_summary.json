@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_offdiag_only",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28307078",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_offdiag_only_electricity_sl720_pl720_sd2026.log",
+  "mae": 0.3038240373134613,
+  "mse": 0.2100759595632553,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

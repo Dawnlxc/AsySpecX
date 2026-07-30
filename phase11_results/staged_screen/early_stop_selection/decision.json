@@ -1,0 +1,8 @@
+{
+  "advance_to_confirmation": 0,
+  "decisive_early_stop": 1,
+  "open_test": 0,
+  "reason": "tail2 cannot satisfy the frozen Stage-D accuracy/resource gates",
+  "selected_arm": null,
+  "test_metrics_used": false
+}

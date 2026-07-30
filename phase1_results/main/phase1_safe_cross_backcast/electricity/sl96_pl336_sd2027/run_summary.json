@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_safe_cross_backcast",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28297089",
+  "log_file": "logs/AsySpecX_phase1/phase1_safe_cross_backcast_electricity_sl96_pl336_sd2027.log",
+  "mae": 0.359923392534256,
+  "mse": 0.2561522424221039,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

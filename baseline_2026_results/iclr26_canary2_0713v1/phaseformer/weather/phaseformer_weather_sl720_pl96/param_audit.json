@@ -1,0 +1,31 @@
+{
+  "complex_trainable_numel": 0,
+  "config": {
+    "alpha": 0.5,
+    "dataset": "weather",
+    "enc_in": 21,
+    "latent_dim": 8,
+    "lpf": 1,
+    "model": "phaseformer",
+    "output": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baseline_2026_results/iclr26_canary2_0713v1/phaseformer/weather/phaseformer_weather_sl720_pl96/param_audit.json",
+    "period_len": 24,
+    "phase_attn_heads": 1,
+    "phase_encoder_hidden": 32,
+    "phase_layers": 3,
+    "phase_num_routers": 8,
+    "pred_len": 96,
+    "predictor_hidden": 64,
+    "repo": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baselines_2026/PhaseFormer_TSL",
+    "seq_len": 720
+  },
+  "dataset": "weather",
+  "model": "phaseformer",
+  "official_commit": "ed1db61c6abfa9326d5ca2a56c6c4ba53ea592ab",
+  "official_repo": "/scratch3/lin250/bldgFM/DUBABA/AsySpecX/baselines_2026/PhaseFormer_TSL",
+  "pred_len": 96,
+  "seq_len": 720,
+  "total_numel": 5616,
+  "trainable_numel": 5616,
+  "trainable_real_scalar_equiv": 5616,
+  "trainable_storage_bytes": 22464
+}

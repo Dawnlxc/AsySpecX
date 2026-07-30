@@ -1,0 +1,10 @@
+job_id	arm	dataset	seq_len	pred_len	seed	cut_freq
+28808817	fk_sm4_mode	weather	96	720	2024	13
+28808818	fk_sm4_mode	weather	96	720	2025	13
+28808819	fk_sm4_mode	weather	96	720	2026	13
+28808820	fk_sm4_ph4_h	weather	96	720	2024	13
+28808821	fk_sm4_ph4_h	weather	96	720	2025	13
+28808822	fk_sm4_ph4_h	weather	96	720	2026	13
+28808823	fk_sm4_ph2_q	weather	96	720	2024	13
+28808824	fk_sm4_ph2_q	weather	96	720	2025	13
+28808825	fk_sm4_ph2_q	weather	96	720	2026	13

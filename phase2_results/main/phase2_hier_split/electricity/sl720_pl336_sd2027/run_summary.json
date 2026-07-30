@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_split",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28307373",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_split_electricity_sl720_pl336_sd2027.log",
+  "mae": 0.2713237404823303,
+  "mse": 0.17160210013389587,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok"
+}

@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_cross_zero_global",
+  "dataset": "ETTm1",
+  "exit_code": 0,
+  "job_id": "28296864",
+  "log_file": "logs/AsySpecX_phase1/phase1_cross_zero_global_ETTm1_sl96_pl192_sd2027.log",
+  "mae": 0.39664292335510254,
+  "mse": 0.3920069634914398,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

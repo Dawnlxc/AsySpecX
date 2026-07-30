@@ -17,6 +17,7 @@ import torch.nn as nn
 from torch import optim
 from torch.optim import lr_scheduler
 
+import json
 import os
 import time
 
@@ -59,12 +60,80 @@ class Exp_Main(Exp_Basic):
         return data_set, data_loader
 
     def _select_optimizer(self):
-        model_optim = optim.Adam(self.model.parameters(), lr=self.args.learning_rate)
+        gate_lr_mult = float(getattr(self.args, 'gate_lr_mult', 1.0))
+        clip_lr_mult = float(getattr(self.args, 'clip_lr_mult', 1.0))
+        if 'AsySpecX' in self.args.model and (gate_lr_mult != 1.0 or clip_lr_mult != 1.0):
+            gate_keywords = ('gate_logit', 'gate_logits', 'global_gate_logit', 'local_gate_logits')
+            gate_params, clip_params, base_params = [], [], []
+            for name, param in self.model.named_parameters():
+                if not param.requires_grad:
+                    continue
+                if 'clip_logit' in name:
+                    clip_params.append(param)
+                elif any(key in name for key in gate_keywords):
+                    gate_params.append(param)
+                else:
+                    base_params.append(param)
+            groups = []
+            if base_params:
+                groups.append({'params': base_params, 'lr': self.args.learning_rate, 'lr_mult': 1.0})
+            if gate_params:
+                groups.append({'params': gate_params, 'lr': self.args.learning_rate * gate_lr_mult, 'lr_mult': gate_lr_mult})
+            if clip_params:
+                groups.append({'params': clip_params, 'lr': self.args.learning_rate * clip_lr_mult, 'lr_mult': clip_lr_mult})
+            model_optim = optim.Adam(groups, lr=self.args.learning_rate)
+        else:
+            model_optim = optim.Adam(self.model.parameters(), lr=self.args.learning_rate)
         return model_optim
 
     def _select_criterion(self):
         criterion = nn.MSELoss()
         return criterion
+
+    def _asyspecx_return_full(self):
+        return (
+            'AsySpecX' in self.args.model
+            and self.model.training
+            and float(getattr(self.args, 'backcast_loss_weight', 0.0)) > 0.0
+        )
+
+    def _call_time_only_model(self, batch_x, batch_cycle=None):
+        if 'AsySpecX' in self.args.model:
+            return self.model(
+                batch_x,
+                cycle_index=batch_cycle,
+                return_full=self._asyspecx_return_full(),
+                eval_residual_part=getattr(self.args, 'eval_residual_part', 'default'),
+            )
+        return self.model(batch_x)
+
+    @staticmethod
+    def _prediction_from_model_output(outputs):
+        if isinstance(outputs, dict):
+            return outputs['pred']
+        return outputs
+
+    def _maybe_add_backcast_loss(self, loss, model_outputs, backcast_target, criterion, f_dim):
+        weight = float(getattr(self.args, 'backcast_loss_weight', 0.0))
+        if weight <= 0.0 or not isinstance(model_outputs, dict):
+            return loss
+        backcast = model_outputs.get('backcast', None)
+        if backcast is None:
+            return loss
+        backcast = backcast[:, :self.args.seq_len, f_dim:]
+        target = backcast_target[:, :self.args.seq_len, f_dim:].to(backcast.device)
+        return loss + weight * criterion(backcast, target)
+
+    def _maybe_add_extra_loss(self, loss):
+        """Add model.extra_loss() (e.g. AsySpecX periodic L1/L2) to the train loss.
+
+        Train-only: vali()/test() never call this, so val/test metrics stay clean.
+        """
+        if hasattr(self.model, "extra_loss"):
+            extra = self.model.extra_loss()
+            if extra is not None:
+                return loss + extra
+        return loss
 
     def _resolve_protocol_channels(self, C):
         """Return list of channel indices selected by P3 (modality) / P4 (node) using channel_meta.csv."""
@@ -252,7 +321,7 @@ class Exp_Main(Exp_Basic):
                             outputs = self.model(batch_x, batch_cycle)
                         elif any(substr in self.args.model for substr in
                                  {'Linear', 'MLP', 'SegRNN', 'TST', 'FITS', 'FreTS', 'Filter', 'SparseTSF', 'MixLinear', 'AsySpecX', 'AsySpecXLocal', 'AsySpecXResid', 'JAX', 'SpecQ', 'SpecFlow', 'PredFlow', 'PredFlowS', 'ComplexFlow', 'CoSTDriver', 'VanillaTC', 'VanillaFreqTC', 'FreqHermV2', 'FreqLagAttn', 'FreqLagAlign', 'FreqLagAlignV2', 'FreqPAC', 'FreqWarpFlow', 'FreqPACv2', 'FreqDMD', 'FreqCepstrum', 'FreqICA', 'FreqWarpFlowV2', 'FreqWarpFlowV3', 'FreqWarpFlowV5', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTF', 'FreqCTFSimple', 'FreqCTFPhase', 'FreqCTFCycle', 'PeriodCrossDecomp', 'FITSCross', 'FreqMLP', 'FreqHerm', 'FreqAsym', 'FreqHermCC', 'FreqHermPUG', 'FreqHermPUGv2', 'FreqHermAPG', 'FreqHermGDG', 'FreqHermSpLR', 'FreqPhaseLag', 'FreqContPhaseLag', 'FreqDirAware', 'FreqContDirAware', 'FreqContDirAwareAH', 'FreqAHv2', 'FreqContDirAwareCanon', 'FreqContDirAwareCanonV2', 'FreqContDirAwareCanonL1', 'FreqDualHead', 'FreqDynDualHead', 'FreqSymOnly', 'FreqAsymOnly', 'FreqSymPhi', 'FreqSymLag', 'FreqPhaseGraph', 'FreqPhaseAttn', 'FreqPhaseGraphB', 'FreqHCoupling', 'FreqOracleMix', 'FreqOracleMixV2', 'FreqHermFITS', 'FreqHermFITSPre', 'PatchPhase', 'FreqPatchSpLR', 'FreqSTFTSSM', 'FreqSelectiveCross', 'FreqTemporalSelectiveCross'}):
-                            outputs = self.model(batch_x)
+                            outputs = self._call_time_only_model(batch_x, batch_cycle)
                         else:
                             if self.args.output_attention:
                                 outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
@@ -263,7 +332,7 @@ class Exp_Main(Exp_Basic):
                         outputs = self.model(batch_x, batch_cycle)
                     elif any(substr in self.args.model for substr in
                              {'Linear', 'MLP', 'SegRNN', 'TST', 'FITS', 'FreTS', 'Filter', 'SparseTSF', 'MixLinear', 'AsySpecX', 'AsySpecXLocal', 'AsySpecXResid', 'JAX', 'SpecQ', 'SpecFlow', 'PredFlow', 'PredFlowS', 'ComplexFlow', 'CoSTDriver', 'VanillaTC', 'VanillaFreqTC', 'FreqHermV2', 'FreqLagAttn', 'FreqLagAlign', 'FreqLagAlignV2', 'FreqPAC', 'FreqWarpFlow', 'FreqPACv2', 'FreqDMD', 'FreqCepstrum', 'FreqICA', 'FreqWarpFlowV2', 'FreqWarpFlowV3', 'FreqWarpFlowV5', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTF', 'FreqCTFSimple', 'FreqCTFPhase', 'FreqCTFCycle', 'PeriodCrossDecomp', 'FITSCross', 'FreqMLP', 'FreqHerm', 'FreqAsym', 'FreqHermCC', 'FreqHermPUG', 'FreqHermPUGv2', 'FreqHermAPG', 'FreqHermGDG', 'FreqHermSpLR', 'FreqPhaseLag', 'FreqContPhaseLag', 'FreqDirAware', 'FreqContDirAware', 'FreqContDirAwareAH', 'FreqAHv2', 'FreqContDirAwareCanon', 'FreqContDirAwareCanonV2', 'FreqContDirAwareCanonL1', 'FreqDualHead', 'FreqDynDualHead', 'FreqSymOnly', 'FreqAsymOnly', 'FreqSymPhi', 'FreqSymLag', 'FreqPhaseGraph', 'FreqPhaseAttn', 'FreqPhaseGraphB', 'FreqHCoupling', 'FreqOracleMix', 'FreqOracleMixV2', 'FreqHermFITS', 'FreqHermFITSPre', 'PatchPhase', 'FreqPatchSpLR', 'FreqSTFTSSM', 'FreqSelectiveCross', 'FreqTemporalSelectiveCross'}):
-                        outputs = self.model(batch_x)
+                        outputs = self._call_time_only_model(batch_x, batch_cycle)
                     else:
                         if self.args.output_attention:
                             outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
@@ -286,10 +355,129 @@ class Exp_Main(Exp_Basic):
         self.model.train()
         return total_loss
 
+    def _eval_val_segments(self):
+        """Log segmented validation metrics on an ORDERED val loader.
+
+        Phase 5-Lockdown: split the chronologically-ordered validation set into K
+        contiguous segments so a selector can prefer the last (nearest-to-test)
+        segment. Uses a fresh shuffle=False, drop_last=False loader (the training
+        val loader shuffles + drops last, which would break segment ordering).
+        Prints one parseable line; does NOT touch training/val/test loss.
+        """
+        K = int(getattr(self.args, 'val_num_segments', 1))
+        if K <= 1:
+            return
+        from torch.utils.data import DataLoader
+        vali_data, _ = self._get_data(flag='val')
+        loader = DataLoader(vali_data, batch_size=self.args.batch_size, shuffle=False,
+                            num_workers=self.args.num_workers, drop_last=False)
+        cyc_models = {'CycleNet', 'TQ', 'FreqHermCycle', 'FreqLagCycle', 'PeriodCross',
+                      'PeriodCrossRRF', 'FreqCTFCycle', 'PeriodCrossDecomp', 'SpecCoherenceRKV',
+                      'SAC_RKV', 'TC_SAC_RKV', 'BSUA_RKV', 'S2TV_BSUA_RKV'}
+        self.model.eval()
+        se_list, ae_list = [], []
+        with torch.no_grad():
+            for (batch_x, batch_y, batch_x_mark, batch_y_mark, batch_cycle) in loader:
+                batch_x = batch_x.float().to(self.device)
+                batch_y = batch_y.float().to(self.device)
+                batch_cycle = batch_cycle.int().to(self.device)
+                if any(s in self.args.model for s in cyc_models):
+                    outputs = self.model(batch_x, batch_cycle)
+                else:
+                    outputs = self._prediction_from_model_output(self._call_time_only_model(batch_x, batch_cycle))
+                f_dim = -1 if self.args.features == 'MS' else 0
+                outputs = outputs[:, -self.args.pred_len:, f_dim:]
+                true = batch_y[:, -self.args.pred_len:, f_dim:]
+                err = (outputs - true).float()
+                se_list.append(err.pow(2).mean(dim=(1, 2)).detach().cpu())
+                ae_list.append(err.abs().mean(dim=(1, 2)).detach().cpu())
+        self.model.train()
+        if not se_list:
+            return
+        se = torch.cat(se_list).numpy()
+        ae = torch.cat(ae_list).numpy()
+        print("[VAL_SEG] " + " ".join(self.segment_val_metrics(se, ae, K)))
+
+    @staticmethod
+    def segment_val_metrics(se, ae, K):
+        """Build the parseable [VAL_SEG] fields from per-sample SE/AE arrays.
+
+        np.array_split keeps chronological order; segments beyond the sample
+        count come back empty and are reported as nan.
+        """
+        val_mse = float(se.mean()) if se.size else float("nan")
+        val_mae = float(ae.mean()) if ae.size else float("nan")
+        parts_se = np.array_split(se, K)
+        parts_ae = np.array_split(ae, K)
+        fields = [f"K={K}", f"val_mse={val_mse:.7f}", f"val_mae={val_mae:.7f}"]
+        for i in range(K):
+            if parts_se[i].size > 0:
+                fields.append(f"val_mse_seg{i}={float(parts_se[i].mean()):.7f}")
+                fields.append(f"val_mae_seg{i}={float(parts_ae[i].mean()):.7f}")
+            else:
+                fields.append(f"val_mse_seg{i}=nan")
+                fields.append(f"val_mae_seg{i}=nan")
+        return fields
+
+    def _collect_preds(self, flag):
+        """Ordered (shuffle=False) predictions+targets for `flag`, for offline ensemble."""
+        from torch.utils.data import DataLoader
+        data_set, _ = self._get_data(flag=flag)
+        loader = DataLoader(data_set, batch_size=self.args.batch_size, shuffle=False,
+                            num_workers=self.args.num_workers, drop_last=False)
+        cyc_models = {'CycleNet', 'TQ', 'FreqHermCycle', 'FreqLagCycle', 'PeriodCross',
+                      'PeriodCrossRRF', 'FreqCTFCycle', 'PeriodCrossDecomp', 'SpecCoherenceRKV',
+                      'SAC_RKV', 'TC_SAC_RKV', 'BSUA_RKV', 'S2TV_BSUA_RKV'}
+        self.model.eval()
+        preds, trues = [], []
+        with torch.no_grad():
+            for (batch_x, batch_y, bxm, bym, batch_cycle) in loader:
+                batch_x = batch_x.float().to(self.device)
+                batch_y = batch_y.float().to(self.device)
+                batch_cycle = batch_cycle.int().to(self.device)
+                if any(s in self.args.model for s in cyc_models):
+                    outputs = self.model(batch_x, batch_cycle)
+                else:
+                    outputs = self._prediction_from_model_output(self._call_time_only_model(batch_x, batch_cycle))
+                f_dim = -1 if self.args.features == 'MS' else 0
+                outputs = outputs[:, -self.args.pred_len:, f_dim:]
+                true = batch_y[:, -self.args.pred_len:, f_dim:]
+                preds.append(outputs.detach().cpu().numpy())
+                trues.append(true.detach().cpu().numpy())
+        import numpy as _np
+        return _np.concatenate(preds, axis=0), _np.concatenate(trues, axis=0)
+
+    def _maybe_save_predictions(self, setting):
+        if int(getattr(self.args, 'save_predictions', 0)) != 1:
+            return
+        save_dir = getattr(self.args, 'pred_save_dir', '') or os.path.join('predictions', setting)
+        os.makedirs(save_dir, exist_ok=True)
+        tag = getattr(self.args, 'pred_tag', '') or getattr(self.args, 'model_id', 'arm')
+        fname = f"{tag}.npz"
+        try:
+            val_pred, val_true = self._collect_preds('val')
+            test_pred, test_true = self._collect_preds('test')
+            import numpy as _np
+            _np.savez_compressed(
+                os.path.join(save_dir, fname),
+                val_pred=val_pred.astype(_np.float32), val_true=val_true.astype(_np.float32),
+                test_pred=test_pred.astype(_np.float32), test_true=test_true.astype(_np.float32),
+                arm=_np.array(tag), dataset=_np.array(str(getattr(self.args, 'data', ''))),
+                seq_len=_np.array(self.args.seq_len), pred_len=_np.array(self.args.pred_len),
+                seed=_np.array(str(getattr(self.args, 'random_seed', '0'))),
+                model_id=_np.array(str(getattr(self.args, 'model_id', ''))))
+            print(f"[save_predictions] wrote {os.path.join(save_dir, fname)}")
+        except Exception as exc:
+            print(f"[save_predictions] skipped: {exc}")
+
     def train(self, setting):
         train_data, train_loader = self._get_data(flag='train')
         vali_data, vali_loader = self._get_data(flag='val')
-        test_data, test_loader = self._get_data(flag='test')
+        evaluate_test_during_train = bool(getattr(self.args, 'eval_test_during_train', 1))
+        if evaluate_test_during_train:
+            test_data, test_loader = self._get_data(flag='test')
+        else:
+            test_data = test_loader = None
 
         path = os.path.join(self.args.checkpoints, setting)
         if not os.path.exists(path):
@@ -297,6 +485,8 @@ class Exp_Main(Exp_Basic):
 
         n_param = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
         print('n_param: {}'.format(n_param))
+        if torch.cuda.is_available():
+            torch.cuda.reset_peak_memory_stats(self.device)
         train_start = time.time()
         time_now = train_start
 
@@ -309,11 +499,14 @@ class Exp_Main(Exp_Basic):
         if self.args.use_amp:
             scaler = torch.cuda.amp.GradScaler()
 
+        max_lr = [group.get('lr', self.args.learning_rate) for group in model_optim.param_groups]
+        if len(max_lr) == 1:
+            max_lr = max_lr[0]
         scheduler = lr_scheduler.OneCycleLR(optimizer=model_optim,
                                             steps_per_epoch=train_steps,
                                             pct_start=self.args.pct_start,
                                             epochs=self.args.train_epochs,
-                                            max_lr=self.args.learning_rate)
+                                            max_lr=max_lr)
 
         for epoch in range(self.args.train_epochs):
             iter_count = 0
@@ -326,6 +519,7 @@ class Exp_Main(Exp_Basic):
                 iter_count += 1
                 model_optim.zero_grad()
                 batch_x = batch_x.float().to(self.device)
+                backcast_target = batch_x
 
                 batch_y = batch_y.float().to(self.device)
                 batch_x_mark = batch_x_mark.float().to(self.device)
@@ -349,7 +543,7 @@ class Exp_Main(Exp_Basic):
                             outputs = self.model(batch_x, batch_y.to(self.device))
                         elif any(substr in self.args.model for substr in
                                  {'Linear', 'MLP', 'SegRNN', 'TST', 'FITS', 'FreTS', 'Filter', 'SparseTSF', 'MixLinear', 'AsySpecX', 'AsySpecXLocal', 'AsySpecXResid', 'JAX', 'SpecQ', 'SpecFlow', 'PredFlow', 'PredFlowS', 'ComplexFlow', 'CoSTDriver', 'VanillaTC', 'VanillaFreqTC', 'FreqHermV2', 'FreqLagAttn', 'FreqLagAlign', 'FreqLagAlignV2', 'FreqPAC', 'FreqWarpFlow', 'FreqPACv2', 'FreqDMD', 'FreqCepstrum', 'FreqICA', 'FreqWarpFlowV2', 'FreqWarpFlowV3', 'FreqWarpFlowV5', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTF', 'FreqCTFSimple', 'FreqCTFPhase', 'FreqCTFCycle', 'PeriodCrossDecomp', 'FITSCross', 'FreqMLP', 'FreqHerm', 'FreqAsym', 'FreqHermCC', 'FreqHermPUG', 'FreqHermPUGv2', 'FreqHermGDG', 'FreqHermSpLR', 'FreqPhaseLag', 'FreqContPhaseLag', 'FreqDirAware', 'FreqContDirAware', 'FreqContDirAwareAH', 'FreqAHv2', 'FreqContDirAwareCanon', 'FreqContDirAwareCanonV2', 'FreqContDirAwareCanonL1', 'FreqDualHead', 'FreqDynDualHead', 'FreqSymOnly', 'FreqAsymOnly', 'FreqSymPhi', 'FreqSymLag', 'FreqPhaseGraph', 'FreqPhaseAttn', 'FreqPhaseGraphB', 'FreqHCoupling', 'FreqOracleMix', 'FreqOracleMixV2', 'FreqHermFITS', 'FreqHermFITSPre', 'PatchPhase', 'FreqPatchSpLR', 'FreqSTFTSSM', 'FreqSelectiveCross', 'FreqTemporalSelectiveCross'}):
-                            outputs = self.model(batch_x)
+                            outputs = self._call_time_only_model(batch_x, batch_cycle)
                         else:
                             if self.args.output_attention:
                                 outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
@@ -357,13 +551,17 @@ class Exp_Main(Exp_Basic):
                                 outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
 
                         f_dim = -1 if self.args.features == 'MS' else 0
+                        model_outputs = outputs
+                        outputs = self._prediction_from_model_output(outputs)
                         outputs = outputs[:, -self.args.pred_len:, f_dim:]
                         batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
                         loss = self._maybe_masked_loss(outputs, batch_y, _cond_mask, criterion)
+                        loss = self._maybe_add_backcast_loss(loss, model_outputs, backcast_target, criterion, f_dim)
                         if hasattr(self.model, "aux_loss") and self.model.aux_loss is not None:
                             loss = loss + self.model.aux_loss
                         if bool(getattr(self.args, "use_spec_loss", 0)):
                             loss = loss + self._spectral_aux_loss(outputs, batch_y)
+                        loss = self._maybe_add_extra_loss(loss)
                         train_loss.append(loss.item())
                 else:
                     if any(substr in self.args.model for substr in {'CycleNet', 'TQ', 'FreqHermCycle', 'FreqLagCycle', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTFCycle', 'PeriodCrossDecomp', 'SpecCoherenceRKV', 'SAC_RKV', 'TC_SAC_RKV', 'BSUA_RKV', 'S2TV_BSUA_RKV'}):
@@ -372,7 +570,7 @@ class Exp_Main(Exp_Basic):
                         outputs = self.model(batch_x, batch_y.to(self.device))
                     elif any(substr in self.args.model for substr in
                              {'Linear', 'MLP', 'SegRNN', 'TST', 'FITS', 'FreTS', 'Filter', 'SparseTSF', 'MixLinear', 'AsySpecX', 'AsySpecXLocal', 'AsySpecXResid', 'JAX', 'SpecQ', 'SpecFlow', 'PredFlow', 'PredFlowS', 'ComplexFlow', 'CoSTDriver', 'VanillaTC', 'VanillaFreqTC', 'FreqHermV2', 'FreqLagAttn', 'FreqLagAlign', 'FreqLagAlignV2', 'FreqPAC', 'FreqWarpFlow', 'FreqPACv2', 'FreqDMD', 'FreqCepstrum', 'FreqICA', 'FreqWarpFlowV2', 'FreqWarpFlowV3', 'FreqWarpFlowV5', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTF', 'FreqCTFSimple', 'FreqCTFPhase', 'FreqCTFCycle', 'PeriodCrossDecomp', 'FITSCross', 'FreqMLP', 'FreqHerm', 'FreqAsym', 'FreqHermCC', 'FreqHermPUG', 'FreqHermPUGv2', 'FreqHermGDG', 'FreqHermSpLR', 'FreqPhaseLag', 'FreqContPhaseLag', 'FreqDirAware', 'FreqContDirAware', 'FreqContDirAwareAH', 'FreqAHv2', 'FreqContDirAwareCanon', 'FreqContDirAwareCanonV2', 'FreqContDirAwareCanonL1', 'FreqDualHead', 'FreqDynDualHead', 'FreqSymOnly', 'FreqAsymOnly', 'FreqSymPhi', 'FreqSymLag', 'FreqPhaseGraph', 'FreqPhaseAttn', 'FreqPhaseGraphB', 'FreqHCoupling', 'FreqOracleMix', 'FreqOracleMixV2', 'FreqHermFITS', 'FreqHermFITSPre', 'PatchPhase', 'FreqPatchSpLR', 'FreqSTFTSSM', 'FreqSelectiveCross', 'FreqTemporalSelectiveCross'}):
-                        outputs = self.model(batch_x)
+                        outputs = self._call_time_only_model(batch_x, batch_cycle)
                     else:
                         if self.args.output_attention:
                             outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
@@ -381,13 +579,17 @@ class Exp_Main(Exp_Basic):
                             outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark, batch_y)
                     # print(outputs.shape,batch_y.shape)
                     f_dim = -1 if self.args.features == 'MS' else 0
+                    model_outputs = outputs
+                    outputs = self._prediction_from_model_output(outputs)
                     outputs = outputs[:, -self.args.pred_len:, f_dim:]
                     batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
                     loss = self._maybe_masked_loss(outputs, batch_y, _cond_mask, criterion)
+                    loss = self._maybe_add_backcast_loss(loss, model_outputs, backcast_target, criterion, f_dim)
                     if hasattr(self.model, "aux_loss") and self.model.aux_loss is not None:
                         loss = loss + self.model.aux_loss
                     if bool(getattr(self.args, "use_spec_loss", 0)):
                         loss = loss + self._spectral_aux_loss(outputs, batch_y)
+                    loss = self._maybe_add_extra_loss(loss)
                     train_loss.append(loss.item())
 
                 if (i + 1) % 100 == 0:
@@ -416,10 +618,13 @@ class Exp_Main(Exp_Basic):
             print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
             train_loss = np.average(train_loss)
             vali_loss = self.vali(vali_data, vali_loader, criterion)
-            test_loss = self.vali(test_data, test_loader, criterion)
-
-            print("Epoch: {0}, Steps: {1} | Train Loss: {2:.7f} Vali Loss: {3:.7f} Test Loss: {4:.7f}".format(
-                epoch + 1, train_steps, train_loss, vali_loss, test_loss))
+            if evaluate_test_during_train:
+                test_loss = self.vali(test_data, test_loader, criterion)
+                print("Epoch: {0}, Steps: {1} | Train Loss: {2:.7f} Vali Loss: {3:.7f} Test Loss: {4:.7f}".format(
+                    epoch + 1, train_steps, train_loss, vali_loss, test_loss))
+            else:
+                print("Epoch: {0}, Steps: {1} | Train Loss: {2:.7f} Vali Loss: {3:.7f} Test Loss: DEFERRED".format(
+                    epoch + 1, train_steps, train_loss, vali_loss))
             early_stopping(vali_loss, self.model, path)
             if early_stopping.early_stop:
                 print("Early stopping")
@@ -433,8 +638,27 @@ class Exp_Main(Exp_Basic):
         best_model_path = path + '/' + 'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
 
+        # Phase 5-Lockdown: log segmented validation metrics on the best model.
+        try:
+            self._eval_val_segments()
+        except Exception as exc:  # never let diagnostics kill a run
+            print(f"[VAL_SEG] skipped: {exc}")
+        diagnostic_model = self.model.module if isinstance(self.model, nn.DataParallel) else self.model
+        if hasattr(diagnostic_model, "get_diagnostics"):
+            try:
+                print(
+                    "[ASYSPECX_FINAL_DIAGNOSTICS] "
+                    + json.dumps(diagnostic_model.get_diagnostics(), sort_keys=True)
+                )
+            except Exception as exc:
+                print(f"[ASYSPECX_FINAL_DIAGNOSTICS] skipped: {exc}")
+
         t_train = time.time() - train_start
         print('t_train: {:.4f}'.format(t_train))
+        if torch.cuda.is_available():
+            print('peak_cuda_mb: {:.2f}'.format(
+                torch.cuda.max_memory_allocated(self.device) / (1024 ** 2)
+            ))
 
         return self.model
 
@@ -479,7 +703,7 @@ class Exp_Main(Exp_Basic):
                             outputs = self.model(batch_x, batch_cycle)
                         elif any(substr in self.args.model for substr in
                                  {'Linear', 'MLP', 'SegRNN', 'TST', 'FITS', 'FreTS', 'Filter', 'SparseTSF', 'MixLinear', 'AsySpecX', 'AsySpecXLocal', 'AsySpecXResid', 'JAX', 'SpecQ', 'SpecFlow', 'PredFlow', 'PredFlowS', 'ComplexFlow', 'CoSTDriver', 'VanillaTC', 'VanillaFreqTC', 'FreqHermV2', 'FreqLagAttn', 'FreqLagAlign', 'FreqLagAlignV2', 'FreqPAC', 'FreqWarpFlow', 'FreqPACv2', 'FreqDMD', 'FreqCepstrum', 'FreqICA', 'FreqWarpFlowV2', 'FreqWarpFlowV3', 'FreqWarpFlowV5', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTF', 'FreqCTFSimple', 'FreqCTFPhase', 'FreqCTFCycle', 'PeriodCrossDecomp', 'FITSCross', 'FreqMLP', 'FreqHerm', 'FreqAsym', 'FreqHermCC', 'FreqHermPUG', 'FreqHermPUGv2', 'FreqHermAPG', 'FreqHermGDG', 'FreqHermSpLR', 'FreqPhaseLag', 'FreqContPhaseLag', 'FreqDirAware', 'FreqContDirAware', 'FreqContDirAwareAH', 'FreqAHv2', 'FreqContDirAwareCanon', 'FreqContDirAwareCanonV2', 'FreqContDirAwareCanonL1', 'FreqDualHead', 'FreqDynDualHead', 'FreqSymOnly', 'FreqAsymOnly', 'FreqSymPhi', 'FreqSymLag', 'FreqPhaseGraph', 'FreqPhaseAttn', 'FreqPhaseGraphB', 'FreqHCoupling', 'FreqOracleMix', 'FreqOracleMixV2', 'FreqHermFITS', 'FreqHermFITSPre', 'PatchPhase', 'FreqPatchSpLR', 'FreqSTFTSSM', 'FreqSelectiveCross', 'FreqTemporalSelectiveCross'}):
-                            outputs = self.model(batch_x)
+                            outputs = self._call_time_only_model(batch_x, batch_cycle)
                         else:
                             if self.args.output_attention:
                                 outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
@@ -490,7 +714,7 @@ class Exp_Main(Exp_Basic):
                         outputs = self.model(batch_x, batch_cycle)
                     elif any(substr in self.args.model for substr in
                              {'Linear', 'MLP', 'SegRNN', 'TST', 'FITS', 'FreTS', 'Filter', 'SparseTSF', 'MixLinear', 'AsySpecX', 'AsySpecXLocal', 'AsySpecXResid', 'JAX', 'SpecQ', 'SpecFlow', 'PredFlow', 'PredFlowS', 'ComplexFlow', 'CoSTDriver', 'VanillaTC', 'VanillaFreqTC', 'FreqHermV2', 'FreqLagAttn', 'FreqLagAlign', 'FreqLagAlignV2', 'FreqPAC', 'FreqWarpFlow', 'FreqPACv2', 'FreqDMD', 'FreqCepstrum', 'FreqICA', 'FreqWarpFlowV2', 'FreqWarpFlowV3', 'FreqWarpFlowV5', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTF', 'FreqCTFSimple', 'FreqCTFPhase', 'FreqCTFCycle', 'PeriodCrossDecomp', 'FITSCross', 'FreqMLP', 'FreqHerm', 'FreqAsym', 'FreqHermCC', 'FreqHermPUG', 'FreqHermPUGv2', 'FreqHermAPG', 'FreqHermGDG', 'FreqHermSpLR', 'FreqPhaseLag', 'FreqContPhaseLag', 'FreqDirAware', 'FreqContDirAware', 'FreqContDirAwareAH', 'FreqAHv2', 'FreqContDirAwareCanon', 'FreqContDirAwareCanonV2', 'FreqContDirAwareCanonL1', 'FreqDualHead', 'FreqDynDualHead', 'FreqSymOnly', 'FreqAsymOnly', 'FreqSymPhi', 'FreqSymLag', 'FreqPhaseGraph', 'FreqPhaseAttn', 'FreqPhaseGraphB', 'FreqHCoupling', 'FreqOracleMix', 'FreqOracleMixV2', 'FreqHermFITS', 'FreqHermFITSPre', 'PatchPhase', 'FreqPatchSpLR', 'FreqSTFTSSM', 'FreqSelectiveCross', 'FreqTemporalSelectiveCross'}):
-                        outputs = self.model(batch_x)
+                        outputs = self._call_time_only_model(batch_x, batch_cycle)
                     else:
                         if self.args.output_attention:
                             outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
@@ -535,7 +759,19 @@ class Exp_Main(Exp_Basic):
                     # np.savetxt(os.path.join(folder_path, str(i) + 'true.txt'), gt)
 
         if self.args.test_flop:
-            test_params_flop(self.model, (batch_x.shape[1], batch_x.shape[2]))
+            flop_model = self.model
+            if 'AsySpecX' in self.args.model and bool(getattr(self.args, 'cycle_residual', 0)):
+                class _CycleFlopWrapper(nn.Module):
+                    def __init__(self, inner):
+                        super().__init__()
+                        self.inner = inner
+
+                    def forward(self, x):
+                        phase = torch.zeros(x.shape[0], dtype=torch.long, device=x.device)
+                        return self.inner(x, cycle_index=phase)
+
+                flop_model = _CycleFlopWrapper(self.model)
+            test_params_flop(flop_model, (batch_x.shape[1], batch_x.shape[2]))
             exit()
         preds = np.concatenate(preds, axis=0)
         trues = np.concatenate(trues, axis=0)
@@ -576,6 +812,8 @@ class Exp_Main(Exp_Basic):
         f.write('\n')
         f.close()
 
+        self._maybe_save_predictions(setting)
+
         # np.save(folder_path + 'metrics.npy', np.array([mae, mse, rmse, mape, mspe,rse, corr]))
         # np.save(folder_path + 'pred.npy', preds)
         # np.save(folder_path + 'true.npy', trues)
@@ -610,9 +848,9 @@ class Exp_Main(Exp_Basic):
                     with torch.cuda.amp.autocast():
                         if any(substr in self.args.model for substr in {'CycleNet', 'TQ', 'FreqHermCycle', 'FreqLagCycle', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTFCycle', 'PeriodCrossDecomp', 'SpecCoherenceRKV', 'SAC_RKV', 'TC_SAC_RKV', 'BSUA_RKV', 'S2TV_BSUA_RKV'}):
                             outputs = self.model(batch_x, batch_cycle)
-                        elif any(substr in self.args.model for substr in
-                                 {'Linear', 'MLP', 'SegRNN', 'TST'}):
-                            outputs = self.model(batch_x)
+                        elif ('AsySpecX' in self.args.model or any(
+                                substr in self.args.model for substr in {'Linear', 'MLP', 'SegRNN', 'TST'})):
+                            outputs = self._call_time_only_model(batch_x, batch_cycle)
                         else:
                             if self.args.output_attention:
                                 outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
@@ -621,8 +859,9 @@ class Exp_Main(Exp_Basic):
                 else:
                     if any(substr in self.args.model for substr in {'CycleNet', 'TQ', 'FreqHermCycle', 'FreqLagCycle', 'PeriodCross', 'PeriodCrossRRF', 'FreqCTFCycle', 'PeriodCrossDecomp', 'SpecCoherenceRKV', 'SAC_RKV', 'TC_SAC_RKV', 'BSUA_RKV', 'S2TV_BSUA_RKV'}):
                         outputs = self.model(batch_x, batch_cycle)
-                    elif any(substr in self.args.model for substr in {'Linear', 'MLP', 'SegRNN', 'TST'}):
-                        outputs = self.model(batch_x)
+                    elif ('AsySpecX' in self.args.model or any(
+                            substr in self.args.model for substr in {'Linear', 'MLP', 'SegRNN', 'TST'})):
+                        outputs = self._call_time_only_model(batch_x, batch_cycle)
                     else:
                         if self.args.output_attention:
                             outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]

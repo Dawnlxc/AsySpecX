@@ -1,0 +1,3 @@
+job_id	arm	dataset	seq_len	pred_len	seed	cut_freq
+28661590	ind_cycle_full_direct_res	weather	96	192	2024	25
+28661591	ind_cycle_full_direct_res	weather	96	192	2025	25

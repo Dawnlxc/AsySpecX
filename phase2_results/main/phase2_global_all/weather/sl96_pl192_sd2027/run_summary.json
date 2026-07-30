@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_all",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28306872",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_all_weather_sl96_pl192_sd2027.log",
+  "mae": 0.28748056292533875,
+  "mse": 0.2458949089050293,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

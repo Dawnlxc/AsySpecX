@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_offdiag_only",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28307062",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_offdiag_only_weather_sl720_pl720_sd2026.log",
+  "mae": 0.3408661186695099,
+  "mse": 0.32029950618743896,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

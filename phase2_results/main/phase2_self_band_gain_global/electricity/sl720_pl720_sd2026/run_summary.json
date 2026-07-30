@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_self_band_gain_global",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28307462",
+  "log_file": "logs/AsySpecX_phase2/phase2_self_band_gain_global_electricity_sl720_pl720_sd2026.log",
+  "mae": 0.30255407094955444,
+  "mse": 0.2102050483226776,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

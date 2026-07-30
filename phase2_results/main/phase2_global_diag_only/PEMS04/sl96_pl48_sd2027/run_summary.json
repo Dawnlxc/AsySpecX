@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_diag_only",
+  "dataset": "PEMS04",
+  "exit_code": 0,
+  "job_id": "28307013",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_diag_only_PEMS04_sl96_pl48_sd2027.log",
+  "mae": 0.5232878923416138,
+  "mse": 0.5320764780044556,
+  "pred_len": 48,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

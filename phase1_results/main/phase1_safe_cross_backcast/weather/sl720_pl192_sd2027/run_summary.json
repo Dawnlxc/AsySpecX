@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_safe_cross_backcast",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28297076",
+  "log_file": "logs/AsySpecX_phase1/phase1_safe_cross_backcast_weather_sl720_pl192_sd2027.log",
+  "mae": 0.26419439911842346,
+  "mse": 0.21552258729934692,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok"
+}

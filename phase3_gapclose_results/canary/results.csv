@@ -1,0 +1,5 @@
+arm,dataset,seq_len,pred_len,seed,status,val_mse,mse,mae,exit_code,job_id,log_file
+phase3_anchor_sparse_period,weather,720,96,2026,ok,0.8321928,0.35861560702323914,0.38113999366760254,0,28331930,logs/AsySpecX_phase3/phase3_anchor_sparse_period_weather_sl720_pl96_sd2026.log
+phase3_fits_individual,weather,720,96,2026,ok,0.9810287,0.38447049260139465,0.39852380752563477,0,28331928,logs/AsySpecX_phase3/phase3_fits_individual_weather_sl720_pl96_sd2026.log
+phase3_fits_shared,weather,720,96,2026,ok,0.8516915,0.36483034491539,0.38507279753685,0,28331927,logs/AsySpecX_phase3/phase3_fits_shared_weather_sl720_pl96_sd2026.log
+phase3_fits_shared_revin_affine,weather,720,96,2026,ok,0.8512602,0.36466577649116516,0.3849160373210907,0,28331929,logs/AsySpecX_phase3/phase3_fits_shared_revin_affine_weather_sl720_pl96_sd2026.log

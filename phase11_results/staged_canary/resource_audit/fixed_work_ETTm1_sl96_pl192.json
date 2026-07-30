@@ -1,0 +1,39 @@
+{
+  "base_profile": "ind_cycle_full",
+  "batch_size": 64,
+  "channels": 7,
+  "cut_freq": 7,
+  "cycle": 96,
+  "dataset": "ETTm1",
+  "device": "NVIDIA H100",
+  "inference_repeats": 50,
+  "pred_len": 192,
+  "rows": [
+    {
+      "arm": "fk_r8_cs",
+      "checkpoint": "checkpoints/phase11_staged_canary_0716v1_fk_r8_cs_ETTm1_sl96_pl192_cf7_sd2026_AsySpecX_ETTm1_ftM_sl96_pl192_cycle96_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 71.556640625,
+      "inference_ms_per_batch": 1.882978230714798,
+      "inference_ratio_vs_stage_a": 1.0,
+      "n_param": 5782,
+      "peak_memory_ratio_vs_stage_a": 1.0,
+      "train_forward_backward_ms_per_batch": 5.896742036566138,
+      "train_ratio_vs_stage_a": 1.0
+    },
+    {
+      "arm": "fk_sm2_tail2",
+      "checkpoint": "checkpoints/phase11_staged_canary_0716v1_fk_sm2_tail2_ETTm1_sl96_pl192_cf7_sd2026_AsySpecX_ETTm1_ftM_sl96_pl192_cycle96_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 71.56201171875,
+      "inference_ms_per_batch": 1.9420530833303928,
+      "inference_ratio_vs_stage_a": 1.0313730937787684,
+      "n_param": 5838,
+      "peak_memory_ratio_vs_stage_a": 1.000075060730955,
+      "train_forward_backward_ms_per_batch": 5.941189173609018,
+      "train_ratio_vs_stage_a": 1.007537575286024
+    }
+  ],
+  "seq_len": 96,
+  "synthetic_only_no_dataset_read": true,
+  "train_repeats": 20,
+  "warmup": 5
+}

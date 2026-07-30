@@ -1,0 +1,16 @@
+{
+  "arm": "phase4_asx_individual_period",
+  "cut_freq": "181",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28338805",
+  "log_file": "logs/AsySpecX_phase4/phase4_asx_individual_period_electricity_sl720_pl96_sd2026.log",
+  "mae": 0.24264517426490784,
+  "mse": 0.1414840966463089,
+  "periods": "24+168",
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1186458
+}

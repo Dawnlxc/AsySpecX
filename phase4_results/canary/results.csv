@@ -1,0 +1,7 @@
+arm,dataset,seq_len,pred_len,seed,status,val_mse,mse,mae,cut_freq,periods,exit_code,job_id,log_file
+phase4_asx_individual,electricity,720,96,2024,ok,1.1349765,1.2705873250961304,0.8828684687614441,181,24+168,0,28338626,logs/AsySpecX_phase4/phase4_asx_individual_electricity_sl720_pl96_sd2024.log
+phase4_asx_individual,weather,720,96,2024,ok,0.9560302,0.3896631896495819,0.39824727177619934,31,144,0,28338625,logs/AsySpecX_phase4/phase4_asx_individual_weather_sl720_pl96_sd2024.log
+phase4_asx_period_multi,electricity,720,96,2024,ok,0.9670584,1.0931187868118286,0.8245367407798767,181,24+168,0,28338630,logs/AsySpecX_phase4/phase4_asx_period_multi_electricity_sl720_pl96_sd2024.log
+phase4_asx_period_multi,weather,720,96,2024,ok,0.8323528,0.32905250787734985,0.3620724380016327,31,144,0,28338629,logs/AsySpecX_phase4/phase4_asx_period_multi_weather_sl720_pl96_sd2024.log
+phase4_asx_period_single,electricity,720,96,2024,ok,0.9669361,1.0927249193191528,0.8243833184242249,181,24+168,0,28338628,logs/AsySpecX_phase4/phase4_asx_period_single_electricity_sl720_pl96_sd2024.log
+phase4_asx_period_single,weather,720,96,2024,ok,0.8323469,0.3290500044822693,0.36207088828086853,31,144,0,28338627,logs/AsySpecX_phase4/phase4_asx_period_single_weather_sl720_pl96_sd2024.log

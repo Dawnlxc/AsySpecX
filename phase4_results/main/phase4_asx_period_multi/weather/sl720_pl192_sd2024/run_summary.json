@@ -1,0 +1,16 @@
+{
+  "arm": "phase4_asx_period_multi",
+  "cut_freq": "31",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28338761",
+  "log_file": "logs/AsySpecX_phase4/phase4_asx_period_multi_weather_sl720_pl192_sd2024.log",
+  "mae": 0.25009042024612427,
+  "mse": 0.19658006727695465,
+  "periods": "144",
+  "pred_len": 192,
+  "seed": 2024,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.4329538
+}

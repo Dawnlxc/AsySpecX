@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_all",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28307256",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_all_weather_sl96_pl192_sd2027.log",
+  "mae": 0.2889947295188904,
+  "mse": 0.24687261879444122,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

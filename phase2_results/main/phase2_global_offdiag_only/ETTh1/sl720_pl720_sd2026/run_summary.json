@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_offdiag_only",
+  "dataset": "ETTh1",
+  "exit_code": 0,
+  "job_id": "28307030",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_offdiag_only_ETTh1_sl720_pl720_sd2026.log",
+  "mae": 0.4573739171028137,
+  "mse": 0.4312650263309479,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

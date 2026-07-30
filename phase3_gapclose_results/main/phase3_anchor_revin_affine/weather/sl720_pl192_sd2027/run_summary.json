@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_anchor_revin_affine",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28332022",
+  "log_file": "logs/AsySpecX_phase3/phase3_anchor_revin_affine_weather_sl720_pl192_sd2027.log",
+  "mae": 0.24839988350868225,
+  "mse": 0.19667981564998627,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.4384034
+}

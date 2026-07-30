@@ -1,0 +1,11 @@
+# arm	dataset	seq_len	pred_len	seed	cut_freq
+ind_cycle_full	weather	96	96	2024	13
+ind_cycle_full	weather	96	192	2024	13
+ind_cycle_full	weather	96	336	2024	13
+ind_cycle_full	weather	96	720	2024	13
+ind_cycle_full	weather	96	96	2025	13
+ind_cycle_full	weather	96	192	2025	13
+ind_cycle_full	weather	96	336	2025	13
+ind_cycle_full	weather	96	720	2025	13
+ind_cycle_full	weather	96	192	2026	13
+ind_cycle_full	weather	96	720	2026	13

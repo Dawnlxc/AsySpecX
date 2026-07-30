@@ -1,0 +1,5 @@
+arm,dataset,seq_len,pred_len,seed,status,mse,mae,exit_code,job_id,log_file
+phase2_global_all,ETTh1,96,96,2026,ok,1.4604830741882324,0.8061686754226685,0,28306798,logs/AsySpecX_phase2/phase2_global_all_ETTh1_sl96_pl96_sd2026.log
+phase2_global_diag_only,ETTh1,96,96,2026,ok,1.4604861736297607,0.8061694502830505,0,28306799,logs/AsySpecX_phase2/phase2_global_diag_only_ETTh1_sl96_pl96_sd2026.log
+phase2_global_offdiag_only,ETTh1,96,96,2026,ok,1.4604798555374146,0.806167721748352,0,28306800,logs/AsySpecX_phase2/phase2_global_offdiag_only_ETTh1_sl96_pl96_sd2026.log
+phase2_self_band_gain_global,ETTh1,96,96,2026,ok,1.460483431816101,0.8061725497245789,0,28306801,logs/AsySpecX_phase2/phase2_self_band_gain_global_ETTh1_sl96_pl96_sd2026.log

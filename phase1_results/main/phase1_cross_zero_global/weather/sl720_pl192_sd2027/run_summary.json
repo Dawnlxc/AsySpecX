@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_cross_zero_global",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28296884",
+  "log_file": "logs/AsySpecX_phase1/phase1_cross_zero_global_weather_sl720_pl192_sd2027.log",
+  "mae": 0.2592995762825012,
+  "mse": 0.20900720357894897,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok"
+}

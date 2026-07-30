@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_safe_cross",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28297014",
+  "log_file": "logs/AsySpecX_phase1/phase1_safe_cross_traffic_sl720_pl720_sd2027.log",
+  "mae": 0.30815958976745605,
+  "mse": 0.4544864594936371,
+  "pred_len": 720,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok"
+}

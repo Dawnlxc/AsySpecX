@@ -1,0 +1,25 @@
+{
+  "default": [
+    "phase6_asx_cross",
+    "phase6_asx_cross_clip05",
+    "phase6_asx_individual",
+    "phase6_asx_individual_revin",
+    "phase6_asx_period_multi",
+    "phase6_asx_individual_period",
+    "phase7_period_multi",
+    "phase7_period_multi_split_clip05",
+    "phase7_period_multi_all_clip05",
+    "phase7_period_multi_learned_clip",
+    "phase7_period_multi_auto_acf",
+    "phase7_period_multi_auto_fft",
+    "phase7_period_multi_patchlinear",
+    "phase7_period_multi_auto_acf_patchlinear",
+    "phase8_auto_acf_patchlinear",
+    "phase8_auto_acf_patchlinear_split_clip05",
+    "phase8_union_auto_patchlinear_split_clip05",
+    "phase8_auto_acf_patchlinear_dlinear",
+    "phase8_union_auto_patchlinear_dlinear",
+    "phase8_hydra_softmax_dlinear",
+    "phase8_hydra_multiscale_dlinear"
+  ]
+}

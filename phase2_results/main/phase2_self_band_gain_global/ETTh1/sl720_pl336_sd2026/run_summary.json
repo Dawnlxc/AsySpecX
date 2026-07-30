@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_self_band_gain_global",
+  "dataset": "ETTh1",
+  "exit_code": 0,
+  "job_id": "28307413",
+  "log_file": "logs/AsySpecX_phase2/phase2_self_band_gain_global_ETTh1_sl720_pl336_sd2026.log",
+  "mae": 0.4377758502960205,
+  "mse": 0.43424877524375916,
+  "pred_len": 336,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

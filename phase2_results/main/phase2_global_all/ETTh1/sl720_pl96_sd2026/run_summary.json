@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_all",
+  "dataset": "ETTh1",
+  "exit_code": 0,
+  "job_id": "28306835",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_all_ETTh1_sl720_pl96_sd2026.log",
+  "mae": 0.4024490714073181,
+  "mse": 0.3791363537311554,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

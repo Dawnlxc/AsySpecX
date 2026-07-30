@@ -1,0 +1,5 @@
+# arm	dataset	seq_len	pred_len	seed	cut_freq
+compact_period_cycle_full	electricity	720	96	2024	181
+compact_period_cycle_full	electricity	720	96	2025	181
+compact_period_cycle_full	electricity	720	336	2024	181
+compact_period_cycle_full	electricity	720	336	2025	181

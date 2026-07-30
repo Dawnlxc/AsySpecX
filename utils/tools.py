@@ -35,7 +35,7 @@ def adjust_learning_rate(optimizer, scheduler, epoch, args, printout=True):
     if epoch in lr_adjust.keys():
         lr = lr_adjust[epoch]
         for param_group in optimizer.param_groups:
-            param_group['lr'] = lr
+            param_group['lr'] = lr * float(param_group.get('lr_mult', 1.0))
         if printout: print('Updating learning rate to {}'.format(lr))
 
 
@@ -46,7 +46,7 @@ class EarlyStopping:
         self.counter = 0
         self.best_score = None
         self.early_stop = False
-        self.val_loss_min = np.Inf
+        self.val_loss_min = np.inf  # np.Inf removed in NumPy 2.0
         self.delta = delta
 
     def __call__(self, val_loss, model, path):

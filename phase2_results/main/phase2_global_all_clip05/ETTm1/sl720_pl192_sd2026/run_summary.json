@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_all_clip05",
+  "dataset": "ETTm1",
+  "exit_code": 0,
+  "job_id": "28307524",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_all_clip05_ETTm1_sl720_pl192_sd2026.log",
+  "mae": 0.3744138479232788,
+  "mse": 0.34526246786117554,
+  "pred_len": 192,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

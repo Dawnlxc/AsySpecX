@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_self_band_gain_global",
+  "dataset": "PEMS04",
+  "exit_code": 0,
+  "job_id": "28307493",
+  "log_file": "logs/AsySpecX_phase2/phase2_self_band_gain_global_PEMS04_sl96_pl48_sd2027.log",
+  "mae": 0.5229303240776062,
+  "mse": 0.5306246876716614,
+  "pred_len": 48,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

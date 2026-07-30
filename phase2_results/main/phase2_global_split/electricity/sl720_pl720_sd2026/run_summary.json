@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_split",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28307174",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_split_electricity_sl720_pl720_sd2026.log",
+  "mae": 0.3038225769996643,
+  "mse": 0.21008124947547913,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

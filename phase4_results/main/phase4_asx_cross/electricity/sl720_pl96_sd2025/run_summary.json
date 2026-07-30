@@ -1,0 +1,16 @@
+{
+  "arm": "phase4_asx_cross",
+  "cut_freq": "181",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28338704",
+  "log_file": "logs/AsySpecX_phase4/phase4_asx_cross_electricity_sl720_pl96_sd2025.log",
+  "mae": 0.24340489506721497,
+  "mse": 0.1416301280260086,
+  "periods": "24+168",
+  "pred_len": 96,
+  "seed": 2025,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1192614
+}

@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_diag_only",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28306985",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_diag_only_electricity_sl96_pl336_sd2027.log",
+  "mae": 0.3033463954925537,
+  "mse": 0.21917150914669037,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

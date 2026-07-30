@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_cross_zero_global",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28296913",
+  "log_file": "logs/AsySpecX_phase1/phase1_cross_zero_global_traffic_sl96_pl336_sd2027.log",
+  "mae": 0.38796666264533997,
+  "mse": 0.6317447423934937,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

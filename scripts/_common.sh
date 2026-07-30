@@ -312,3 +312,125 @@ apply_mixlinear_overrides() {
     esac
 }
 
+# Phase 5-Lockdown default period list per dataset (comma form).
+# Override globally with the PERIODS env var. PEMS sampling period is uncertain;
+# 24 is a placeholder -- override with e.g. PERIODS=12 / 96 if needed.
+phase5_periods_for() {
+    case "$1" in
+        weather)       echo "144" ;;
+        electricity)   echo "24,168" ;;
+        ETTh1|ETTh2)   echo "24,168" ;;
+        ETTm1|ETTm2)   echo "96,672" ;;
+        traffic)       echo "24,168" ;;
+        PEMS04|PEMS08) echo "24" ;;   # period uncertain; override via PERIODS
+        *)             echo "24" ;;
+    esac
+}
+
+# Emit CLI flags (one per line) for a Phase 5 locked candidate arm.
+# Usage: mapfile -t FLAGS < <(phase5_arm_flags <arm> <periods> <first_period>)
+# periods may use ',' or '+' (run.py --periods accepts both).
+phase5_arm_flags() {
+    local arm="$1" periods="$2" first="$3"
+    local CROSS=(--spectral_lift fits_linear --lift_sharing shared --cross_mode asym_lowrank --residual_part split --gate_type hier_channel_band --gate_init_logit -6.0 --gate_max 1.0 --gate_lr_mult 5.0 --residual_clip_eta -1 --backcast_loss_weight 0.0 --norm_mode rin_noaffine --temporal_adapter none)
+    local PERIOD_MULTI=(--temporal_adapter sparse_period --periods "$periods" --periodic_init seasonal_naive --period_fusion sum_gated --period_gate_type period --period_gate_init_logit 0.0 --temporal_fusion convex --temporal_gate_type horizon --temporal_gate_init_logit -4.0)
+    local out=()
+    case "$arm" in
+        phase5_asx_cross)
+            out=("${CROSS[@]}") ;;
+        phase5_asx_cross_clip05)
+            out=(--spectral_lift fits_linear --lift_sharing shared --cross_mode asym_lowrank --residual_part all --gate_type hier_channel_band --gate_init_logit -6.0 --gate_max 1.0 --gate_lr_mult 5.0 --residual_clip_eta 0.5 --backcast_loss_weight 0.0 --norm_mode rin_noaffine --temporal_adapter none) ;;
+        phase5_asx_individual)
+            out=(--spectral_lift fits_linear --lift_sharing individual --cross_mode none --norm_mode rin_noaffine --temporal_adapter none --backcast_loss_weight 0.0) ;;
+        phase5_asx_individual_revin)
+            out=(--spectral_lift fits_linear --lift_sharing individual --cross_mode none --norm_mode revin_affine --temporal_adapter none --backcast_loss_weight 0.0) ;;
+        phase5_asx_period_multi)
+            out=(--spectral_lift fits_linear --lift_sharing shared --cross_mode asym_lowrank --residual_part split --gate_type hier_channel_band --gate_init_logit -6.0 --gate_max 1.0 --gate_lr_mult 5.0 --residual_clip_eta -1 --backcast_loss_weight 0.0 --norm_mode rin_noaffine "${PERIOD_MULTI[@]}" --periodic_l1_weight 0.0 --periodic_l2_weight 0.0 --temporal_gate_l1_weight 0.0) ;;
+        phase5_asx_individual_period)
+            out=(--spectral_lift fits_linear --lift_sharing individual --cross_mode none --norm_mode rin_noaffine "${PERIOD_MULTI[@]}" --backcast_loss_weight 0.0 --temporal_gate_l1_weight 0.0) ;;
+        phase5_asx_period_multi_gate_l1)
+            out=(--spectral_lift fits_linear --lift_sharing shared --cross_mode asym_lowrank --residual_part split --gate_type hier_channel_band --gate_init_logit -6.0 --gate_max 1.0 --gate_lr_mult 5.0 --residual_clip_eta -1 --backcast_loss_weight 0.0 --norm_mode rin_noaffine "${PERIOD_MULTI[@]}" --periodic_l1_weight 0.0 --periodic_l2_weight 0.0 --temporal_gate_l1_weight 1e-4) ;;
+        *)
+            echo "phase5_arm_flags: unknown arm $arm" >&2; return 1 ;;
+    esac
+    printf '%s\n' "${out[@]}"
+}
+
+# Phase 6 arm flags == identical config to the phase5 arm of the same name.
+# (Phase 6 only renames arms for the full-field run; no structural change.)
+phase6_arm_flags() {
+    local arm="$1" periods="$2" first="$3"
+    phase5_arm_flags "${arm/phase6_/phase5_}" "$periods" "$first"
+}
+
+# Phase 7 arm flags. All arms start from the phase6 period_multi config and
+# append overrides (argparse takes the LAST value for repeated flags). Auto-period
+# arms use the SAME flags -- the runner resolves periods and passes --periods.
+PHASE7_ARMS_FULL="phase7_period_multi phase7_period_multi_split_clip05 phase7_period_multi_all_clip05 phase7_period_multi_learned_clip phase7_period_multi_auto_acf phase7_period_multi_auto_fft phase7_period_multi_patchlinear phase7_period_multi_auto_acf_patchlinear"
+PHASE7_ARMS_COMPACT="phase7_period_multi phase7_period_multi_split_clip05 phase7_period_multi_auto_acf phase7_period_multi_patchlinear phase7_period_multi_auto_acf_patchlinear"
+PATCH_FLAGS_PHASE7="--patch_adapter patch_linear --patch_len 16 --patch_stride 8 --patch_fusion convex --patch_gate_type horizon --patch_gate_init_logit -6.0 --patch_l1_weight 0.0 --patch_l2_weight 0.0"
+
+phase7_arm_flags() {
+    local arm="$1" periods="$2" first="$3"
+    local base; mapfile -t base < <(phase6_arm_flags phase6_asx_period_multi "$periods" "$first")
+    local extra=()
+    case "$arm" in
+        phase7_period_multi) ;;
+        phase7_period_multi_split_clip05)
+            extra=(--residual_part split --residual_clip_eta 0.5) ;;
+        phase7_period_multi_all_clip05)
+            extra=(--residual_part all --residual_clip_eta 0.5) ;;
+        phase7_period_multi_learned_clip)
+            extra=(--energy_control learned_clip --learned_clip_scope component_channel_band --learned_clip_eta_init 1.0 --learned_clip_eta_max 2.0 --clip_lr_mult 5.0 --residual_clip_eta -1) ;;
+        phase7_period_multi_auto_acf)
+            extra=(--period_mode auto_acf --auto_period_topk 3 --auto_period_min 4 --auto_period_max 0) ;;
+        phase7_period_multi_auto_fft)
+            extra=(--period_mode auto_fft --auto_period_topk 3 --auto_period_min 4 --auto_period_max 0) ;;
+        phase7_period_multi_patchlinear)
+            extra=($PATCH_FLAGS_PHASE7) ;;
+        phase7_period_multi_auto_acf_patchlinear)
+            extra=(--period_mode auto_acf --auto_period_topk 3 --auto_period_min 4 --auto_period_max 0 $PATCH_FLAGS_PHASE7) ;;
+        *)
+            echo "phase7_arm_flags: unknown arm $arm" >&2; return 1 ;;
+    esac
+    printf '%s\n' "${base[@]}" "${extra[@]}"
+}
+
+# Does this phase7 arm use auto-period discovery?
+phase7_arm_is_auto() {
+    case "$1" in *auto_acf*) echo "auto_acf" ;; *auto_fft*) echo "auto_fft" ;; *) echo "" ;; esac
+}
+
+# Phase 8-Hydra arms. Base = phase7 auto_acf + patchlinear; append overrides.
+PHASE8_ARMS_FULL="phase8_auto_acf_patchlinear phase8_auto_acf_patchlinear_split_clip05 phase8_union_auto_patchlinear_split_clip05 phase8_auto_acf_patchlinear_dlinear phase8_union_auto_patchlinear_dlinear phase8_hydra_softmax_dlinear phase8_hydra_multiscale_dlinear"
+PHASE8_ARMS_COMPACT="phase8_auto_acf_patchlinear phase8_auto_acf_patchlinear_split_clip05 phase8_auto_acf_patchlinear_dlinear phase8_hydra_softmax_dlinear"
+
+# Discovery method for a phase8 arm (union arms use union_auto; else auto_acf; else "").
+# The hydra arms also carry --period_mode union_auto via $UNION in phase8_arm_flags, so they must
+# resolve union periods here too -- otherwise they silently train on the manual phase5 periods.
+phase8_arm_is_auto() {
+    case "$1" in *union_auto*|*hydra*) echo "union_auto" ;; *auto_acf*) echo "auto_acf" ;; *) echo "" ;; esac
+}
+
+phase8_arm_flags() {
+    local arm="$1" periods="$2" first="$3"
+    local base; mapfile -t base < <(phase7_arm_flags phase7_period_multi_auto_acf_patchlinear "$periods" "$first")
+    local UNION=(--period_mode union_auto --max_periods 5)
+    local CLIP05=(--residual_part split --residual_clip_eta 0.5)
+    local DLINEAR=(--linear_adapter dlinear_decomp --linear_fusion convex --linear_gate_type horizon --linear_gate_init_logit -6.0)
+    local MULTISCALE=(--linear_adapter multiscale_dlinear --multiscale_factors 1,2,4 --multiscale_fusion softmax --multiscale_gate_type scale --linear_fusion convex --linear_gate_type horizon --linear_gate_init_logit -6.0)
+    local HYDRA=(--branch_fusion softmax_static --branch_fusion_scope horizon --branch_init_main_logit 4.0 --branch_init_aux_logit -4.0)
+    local extra=()
+    case "$arm" in
+        phase8_auto_acf_patchlinear) ;;
+        phase8_auto_acf_patchlinear_split_clip05)          extra=("${CLIP05[@]}") ;;
+        phase8_union_auto_patchlinear_split_clip05)        extra=("${UNION[@]}" "${CLIP05[@]}") ;;
+        phase8_auto_acf_patchlinear_dlinear)               extra=("${DLINEAR[@]}") ;;
+        phase8_union_auto_patchlinear_dlinear)             extra=("${UNION[@]}" "${DLINEAR[@]}") ;;
+        phase8_hydra_softmax_dlinear)                      extra=("${UNION[@]}" "${DLINEAR[@]}" "${HYDRA[@]}" "${CLIP05[@]}") ;;
+        phase8_hydra_multiscale_dlinear)                   extra=("${UNION[@]}" "${MULTISCALE[@]}" "${HYDRA[@]}" "${CLIP05[@]}") ;;
+        *) echo "phase8_arm_flags: unknown arm $arm" >&2; return 1 ;;
+    esac
+    printf '%s\n' "${base[@]}" "${extra[@]}"
+}
+

@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_diag_only_weather_guard",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28332109",
+  "log_file": "logs/AsySpecX_phase3/phase3_diag_only_weather_guard_electricity_sl720_pl96_sd2027.log",
+  "mae": 0.24302895367145538,
+  "mse": 0.14141599833965302,
+  "pred_len": 96,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1192454
+}

@@ -1,0 +1,9 @@
+# arm	dataset	seq_len	pred_len	seed	cut_freq
+factor_r2_cycle	electricity	96	96	2026	25
+factor_r2_cycle	electricity	96	336	2026	25
+factor_r4_cycle	electricity	96	96	2026	25
+factor_r4_cycle	electricity	96	336	2026	25
+factor_r2_cycle_direct_res	electricity	96	96	2026	25
+factor_r2_cycle_direct_res	electricity	96	336	2026	25
+factor_r4_cycle_direct_res	electricity	96	96	2026	25
+factor_r4_cycle_direct_res	electricity	96	336	2026	25

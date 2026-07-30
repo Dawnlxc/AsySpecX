@@ -1,0 +1,27 @@
+model,seq_len,expected_cells,mse_cells,mae_cells,mape_cells,parameter_cells,ok_cells,missing_or_failed_cells,status_counts
+Asy2+Echo,96,44,8,8,0,8,8,36,not_available=36; ok=8
+Asy2+Echo,720,44,8,8,0,8,8,36,not_available=36; ok=8
+TQNet,96,44,44,44,0,44,44,0,ok=44
+TQNet,720,44,44,44,0,44,44,0,ok=44
+CycleNet,96,44,44,44,0,44,44,0,ok=44
+CycleNet,720,44,44,44,0,44,44,0,ok=44
+FITS,96,44,44,44,0,44,44,0,ok=44
+FITS,720,44,44,44,0,44,44,0,ok=44
+SparseTSF,96,44,40,40,0,40,40,4,incompatible_config=4; ok=40
+SparseTSF,720,44,40,40,0,40,40,4,incompatible_config=4; ok=40
+FreTS,96,44,44,44,0,44,44,0,ok=44
+FreTS,720,44,33,33,0,44,33,11,cuda_oom=8; incomplete_no_final_metrics=2; not_run_or_no_log=1; ok=33
+FilterNet,96,44,44,44,0,44,44,0,ok=44
+FilterNet,720,44,44,44,0,44,44,0,ok=44
+iTransformer,96,44,44,44,0,44,44,0,ok=44
+iTransformer,720,44,44,44,0,44,44,0,ok=44
+PatchTST,96,44,44,44,0,44,44,0,ok=44
+PatchTST,720,44,24,24,0,44,24,20,incomplete_no_final_metrics=2; not_run_or_no_log=18; ok=24
+DLinear,96,44,44,44,0,44,44,0,ok=44
+DLinear,720,44,44,44,0,44,44,0,ok=44
+MixLinear,96,44,44,44,0,44,44,0,ok=44
+MixLinear,720,44,44,44,0,44,44,0,ok=44
+PhaseFormer,96,44,8,8,0,8,8,36,not_available=36; ok=8
+PhaseFormer,720,44,8,8,0,8,8,36,not_available=36; ok=8
+FreqCycle,96,44,8,8,0,8,8,36,not_available=36; ok=8
+FreqCycle,720,44,8,8,0,8,8,36,not_available=36; ok=8

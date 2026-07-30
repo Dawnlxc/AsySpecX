@@ -1,0 +1,16 @@
+{
+  "arm": "phase4_asx_individual_revin",
+  "cut_freq": "31",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28338817",
+  "log_file": "logs/AsySpecX_phase4/phase4_asx_individual_revin_weather_sl720_pl96_sd2026.log",
+  "mae": 0.20051971077919006,
+  "mse": 0.14775338768959045,
+  "periods": "144",
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.3813596
+}

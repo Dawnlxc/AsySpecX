@@ -1,0 +1,54 @@
+{
+  "batch_size": 64,
+  "device": "NVIDIA H100",
+  "inference_repeats": 50,
+  "rows": [
+    {
+      "arm": "dense_direct",
+      "checkpoint": "checkpoints/phase11_screen_0715v1_dense_direct_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 134.7041015625,
+      "inference_ms_per_batch": 3.8156122993677855,
+      "inference_ratio_vs_dense": 1.0,
+      "n_param": 138306,
+      "peak_memory_ratio_vs_dense": 1.0,
+      "train_forward_backward_ms_per_batch": 14.743588538840413,
+      "train_ratio_vs_dense": 1.0
+    },
+    {
+      "arm": "fk_r8_cs",
+      "checkpoint": "checkpoints/phase11_screen_0715v1_fk_r8_cs_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 133.966796875,
+      "inference_ms_per_batch": 3.6537478771060705,
+      "inference_ratio_vs_dense": 0.9575783885882393,
+      "n_param": 75882,
+      "peak_memory_ratio_vs_dense": 0.994526486729449,
+      "train_forward_backward_ms_per_batch": 13.968264195136726,
+      "train_ratio_vs_dense": 0.9474127793473632
+    },
+    {
+      "arm": "fk_r8",
+      "checkpoint": "checkpoints/phase11_screen_0715v1_fk_r8_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 133.8828125,
+      "inference_ms_per_batch": 3.5812985710799694,
+      "inference_ratio_vs_dense": 0.938590792275557,
+      "n_param": 75714,
+      "peak_memory_ratio_vs_dense": 0.9939030136946577,
+      "train_forward_backward_ms_per_batch": 13.483169279061258,
+      "train_ratio_vs_dense": 0.914510686698919
+    },
+    {
+      "arm": "fk_r4",
+      "checkpoint": "checkpoints/phase11_screen_0715v1_fk_r4_weather_sl96_pl720_cf13_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle144_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 133.8173828125,
+      "inference_ms_per_batch": 3.719776477664709,
+      "inference_ratio_vs_dense": 0.9748832391281065,
+      "n_param": 72450,
+      "peak_memory_ratio_vs_dense": 0.9934172847024366,
+      "train_forward_backward_ms_per_batch": 13.840552046895027,
+      "train_ratio_vs_dense": 0.9387505633674982
+    }
+  ],
+  "synthetic_only_no_dataset_read": true,
+  "train_repeats": 20,
+  "warmup": 5
+}

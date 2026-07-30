@@ -1,0 +1,2 @@
+arm,dataset,seq_len,pred_len,seed,status,mse,mae,exit_code,job_id,log_file
+phase1_fits_only,ETTh1,96,96,2026,ok,1.4602195024490356,0.8061031699180603,0,28296672,logs/AsySpecX_phase1/phase1_fits_only_ETTh1_sl96_pl96_sd2026.log

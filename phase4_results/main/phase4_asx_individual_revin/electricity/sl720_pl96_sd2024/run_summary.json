@@ -1,0 +1,16 @@
+{
+  "arm": "phase4_asx_individual_revin",
+  "cut_freq": "181",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28338821",
+  "log_file": "logs/AsySpecX_phase4/phase4_asx_individual_revin_electricity_sl720_pl96_sd2024.log",
+  "mae": 0.24431486427783966,
+  "mse": 0.14266787469387054,
+  "periods": "24+168",
+  "pred_len": 96,
+  "seed": 2024,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1197562
+}

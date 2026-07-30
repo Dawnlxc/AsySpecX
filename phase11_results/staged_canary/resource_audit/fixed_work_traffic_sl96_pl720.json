@@ -1,0 +1,50 @@
+{
+  "base_profile": "ind_cycle_full",
+  "batch_size": 64,
+  "channels": 862,
+  "cut_freq": 25,
+  "cycle": 168,
+  "dataset": "traffic",
+  "device": "NVIDIA H100",
+  "inference_repeats": 50,
+  "pred_len": 720,
+  "rows": [
+    {
+      "arm": "fk_r8_cs",
+      "checkpoint": "checkpoints/phase11_staged_canary_0716v1_fk_r8_cs_traffic_sl96_pl720_cf25_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle168_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 2793.78466796875,
+      "inference_ms_per_batch": 108.12486855313182,
+      "inference_ratio_vs_stage_a": 1.0,
+      "n_param": 9664092,
+      "peak_memory_ratio_vs_stage_a": 1.0,
+      "train_forward_backward_ms_per_batch": 463.4289488196373,
+      "train_ratio_vs_stage_a": 1.0
+    },
+    {
+      "arm": "fk_sm2_mode",
+      "checkpoint": "checkpoints/phase11_staged_canary_0716v1_fk_sm2_mode_traffic_sl96_pl720_cf25_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle168_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 2793.10888671875,
+      "inference_ms_per_batch": 107.03394535928965,
+      "inference_ratio_vs_stage_a": 0.9899105246698533,
+      "n_param": 9664148,
+      "peak_memory_ratio_vs_stage_a": 0.9997581126212954,
+      "train_forward_backward_ms_per_batch": 468.95404481329024,
+      "train_ratio_vs_stage_a": 1.0119222072935354
+    },
+    {
+      "arm": "fk_sm2_tail2",
+      "checkpoint": "checkpoints/phase11_staged_canary_0716v1_fk_sm2_tail2_traffic_sl96_pl720_cf25_sd2026_AsySpecX_custom_ftM_sl96_pl720_cycle168_seed2026/checkpoint.pth",
+      "fixed_work_peak_cuda_mb": 2793.10888671875,
+      "inference_ms_per_batch": 106.3805534131825,
+      "inference_ratio_vs_stage_a": 0.9838675860300151,
+      "n_param": 9664148,
+      "peak_memory_ratio_vs_stage_a": 0.9997581126212954,
+      "train_forward_backward_ms_per_batch": 469.408260518685,
+      "train_ratio_vs_stage_a": 1.0129023266981425
+    }
+  ],
+  "seq_len": 96,
+  "synthetic_only_no_dataset_read": true,
+  "train_repeats": 20,
+  "warmup": 5
+}

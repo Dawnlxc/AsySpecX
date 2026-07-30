@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_individual_hier_split",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28331995",
+  "log_file": "logs/AsySpecX_phase3/phase3_individual_hier_split_electricity_sl720_pl336_sd2026.log",
+  "mae": 0.27700936794281006,
+  "mse": 0.17579419910907745,
+  "pred_len": 336,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1481043
+}

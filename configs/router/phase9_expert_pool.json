@@ -1,0 +1,10 @@
+{
+  "anchor_expert": "anchor",
+  "experts": [
+    {"name": "anchor", "arm": "phase7_period_multi_auto_acf_patchlinear"},
+    {"name": "dlinear", "arm": "phase8_auto_acf_patchlinear_dlinear"},
+    {"name": "split_clip", "arm": "phase8_auto_acf_patchlinear_split_clip05"},
+    {"name": "individual_revin", "arm": "phase6_asx_individual_revin"},
+    {"name": "individual_period", "arm": "phase6_asx_individual_period"}
+  ]
+}

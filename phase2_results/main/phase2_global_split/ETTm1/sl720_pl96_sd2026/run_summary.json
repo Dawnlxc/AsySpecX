@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_split",
+  "dataset": "ETTm1",
+  "exit_code": 0,
+  "job_id": "28307139",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_split_ETTm1_sl720_pl96_sd2026.log",
+  "mae": 0.35960307717323303,
+  "mse": 0.31587764620780945,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

@@ -1,0 +1,6 @@
+job_id	arm	dataset	seq_len	pred_len	seed	cut_freq
+DRY	fk_r8_cs	weather	96	720	2026	13
+DRY	fk_sm2_shared	weather	96	720	2026	13
+DRY	fk_sm2_mode	weather	96	720	2026	13
+DRY	fk_sm4_mode	weather	96	720	2026	13
+DRY	fk_sm4_frozen	weather	96	720	2026	13

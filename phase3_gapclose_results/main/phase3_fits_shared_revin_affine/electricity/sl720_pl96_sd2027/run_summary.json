@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_fits_shared_revin_affine",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28332013",
+  "log_file": "logs/AsySpecX_phase3/phase3_fits_shared_revin_affine_electricity_sl720_pl96_sd2027.log",
+  "mae": 0.24351154267787933,
+  "mse": 0.14182688295841217,
+  "pred_len": 96,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1196957
+}

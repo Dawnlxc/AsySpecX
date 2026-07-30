@@ -40,3 +40,11 @@ slurm-*.out
 .venv/
 venv/
 *.log
+
+# --- emergency backup 0731: heavy artifacts stay local ---
+phase7_results/
+phase8_results/
+phase9_results/
+baselines_2026/
+checkpoints/
+outputs/

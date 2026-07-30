@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_self_band_gain_global",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28307483",
+  "log_file": "logs/AsySpecX_phase2/phase2_self_band_gain_global_traffic_sl720_pl96_sd2027.log",
+  "mae": 0.2789698541164398,
+  "mse": 0.39337101578712463,
+  "pred_len": 96,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok"
+}

@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_fits_only",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28296786",
+  "log_file": "logs/AsySpecX_phase1/phase1_fits_only_weather_sl96_pl720_sd2027.log",
+  "mae": 0.36241868138313293,
+  "mse": 0.37196654081344604,
+  "pred_len": 720,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_safe_cross_backcast",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28297100",
+  "log_file": "logs/AsySpecX_phase1/phase1_safe_cross_backcast_traffic_sl720_pl192_sd2026.log",
+  "mae": 0.28338491916656494,
+  "mse": 0.40393078327178955,
+  "pred_len": 192,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

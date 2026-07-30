@@ -1,0 +1,13 @@
+{
+  "arm": "phase1_fits_only",
+  "dataset": "traffic",
+  "exit_code": 0,
+  "job_id": "28296808",
+  "log_file": "logs/AsySpecX_phase1/phase1_fits_only_traffic_sl96_pl192_sd2026.log",
+  "mae": 0.3751300275325775,
+  "mse": 0.6076003313064575,
+  "pred_len": 192,
+  "seed": 2026,
+  "seq_len": 96,
+  "status": "ok"
+}

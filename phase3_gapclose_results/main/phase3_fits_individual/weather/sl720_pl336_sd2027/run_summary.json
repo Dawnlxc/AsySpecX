@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_fits_individual",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28331975",
+  "log_file": "logs/AsySpecX_phase3/phase3_fits_individual_weather_sl720_pl336_sd2027.log",
+  "mae": 0.28201237320899963,
+  "mse": 0.2405073642730713,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.5032219
+}

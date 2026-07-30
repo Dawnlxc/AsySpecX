@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_anchor_revin_affine",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28332032",
+  "log_file": "logs/AsySpecX_phase3/phase3_anchor_revin_affine_electricity_sl720_pl720_sd2027.log",
+  "mae": 0.30424705147743225,
+  "mse": 0.21051335334777832,
+  "pred_len": 720,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1776131
+}

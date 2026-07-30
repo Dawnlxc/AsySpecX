@@ -1,0 +1,22 @@
+{
+  "arm": "dense_direct",
+  "cut_freq": 13,
+  "dataset": "weather",
+  "exit_code": 0,
+  "forecast_kernel_gate_mean": null,
+  "job_id": "28797083",
+  "log_file": "logs/AsySpecX_phase11_eval/phase11_screen_0715v1_dense_direct_weather_sl96_pl720_cf13_sd2026.log",
+  "mae": 0.33882686495780945,
+  "mse": 0.3428370952606201,
+  "n_param": 138306,
+  "peak_cuda_mb": 143.99,
+  "pred_len": 720,
+  "seed": 2026,
+  "selection_val_mse": 0.6853235,
+  "seq_len": 96,
+  "source_summary": "phase11_results/screen/dense_direct/weather/sl96_pl720_cf13_sd2026/run_summary.json",
+  "status": "ok",
+  "t_inf": 5.3513,
+  "t_train": 269.0191,
+  "test_opened_after_validation_selection": true
+}

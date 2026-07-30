@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_fits_individual",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28331984",
+  "log_file": "logs/AsySpecX_phase3/phase3_fits_individual_electricity_sl720_pl720_sd2027.log",
+  "mae": 0.30291423201560974,
+  "mse": 0.20912550389766693,
+  "pred_len": 720,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1797037
+}

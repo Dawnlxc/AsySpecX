@@ -1,0 +1,27 @@
+model,seq_len,expected_cells,mse_cells,mae_cells,mape_cells,parameter_cells,ok_cells,missing_or_failed_cells,status_counts
+Compact + Echo,96,44,44,44,40,44,44,0,ok=44
+Compact + Echo,720,44,44,44,40,44,44,0,ok=44
+TQNet,96,44,44,44,0,44,44,0,ok=44
+TQNet,720,44,44,44,0,44,44,0,ok=44
+CycleNet,96,44,44,44,0,44,44,0,ok=44
+CycleNet,720,44,44,44,0,44,44,0,ok=44
+FITS,96,44,44,44,0,44,44,0,ok=44
+FITS,720,44,44,44,0,44,44,0,ok=44
+SparseTSF,96,44,44,44,4,44,44,0,ok=44
+SparseTSF,720,44,44,44,4,44,44,0,ok=44
+FreTS,96,44,44,44,0,44,44,0,ok=44
+FreTS,720,44,44,44,11,44,44,0,ok=44
+FilterNet,96,44,44,44,0,44,44,0,ok=44
+FilterNet,720,44,44,44,0,44,44,0,ok=44
+iTransformer,96,44,44,44,0,44,44,0,ok=44
+iTransformer,720,44,44,44,0,44,44,0,ok=44
+PatchTST,96,44,44,44,0,44,44,0,ok=44
+PatchTST,720,44,44,44,20,44,44,0,ok=44
+DLinear,96,44,44,44,0,44,44,0,ok=44
+DLinear,720,44,44,44,0,44,44,0,ok=44
+MixLinear,96,44,44,44,0,44,44,0,ok=44
+MixLinear,720,44,44,44,0,44,44,0,ok=44
+PhaseFormer,96,44,44,44,36,44,44,0,ok=44
+PhaseFormer,720,44,44,44,36,44,44,0,ok=44
+FreqCycle,96,44,44,44,36,44,44,0,ok=44
+FreqCycle,720,44,44,44,36,44,44,0,ok=44

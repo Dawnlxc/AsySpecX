@@ -1,0 +1,5 @@
+# arm	dataset	seq_len	pred_len	seed	cut_freq
+cross_cycle_full	electricity	720	96	2026	61
+cross_cycle_full	electricity	720	336	2026	61
+cross_cycle_full	electricity	720	96	2026	121
+cross_cycle_full	electricity	720	336	2026	121

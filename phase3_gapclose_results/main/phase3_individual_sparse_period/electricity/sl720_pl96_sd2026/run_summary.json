@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_individual_sparse_period",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28332089",
+  "log_file": "logs/AsySpecX_phase3/phase3_individual_sparse_period_electricity_sl720_pl96_sd2026.log",
+  "mae": 0.2422054260969162,
+  "mse": 0.1412050724029541,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1183857
+}

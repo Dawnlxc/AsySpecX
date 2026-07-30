@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_all",
+  "dataset": "ETTm1",
+  "exit_code": 0,
+  "job_id": "28307238",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_all_ETTm1_sl720_pl720_sd2026.log",
+  "mae": 0.4211253225803375,
+  "mse": 0.4248979687690735,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok"
+}

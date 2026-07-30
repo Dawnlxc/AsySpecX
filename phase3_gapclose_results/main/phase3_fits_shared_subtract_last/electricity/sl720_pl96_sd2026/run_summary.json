@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_fits_shared_subtract_last",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28332041",
+  "log_file": "logs/AsySpecX_phase3/phase3_fits_shared_subtract_last_electricity_sl720_pl96_sd2026.log",
+  "mae": 0.24395860731601715,
+  "mse": 0.14192169904708862,
+  "pred_len": 96,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1200715
+}

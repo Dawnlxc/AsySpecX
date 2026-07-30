@@ -1,0 +1,5 @@
+job_id	pred_len	lpf	alpha	reason
+28798256	96	3	0.5	scaled_from_l720_frequency_fraction
+28798257	192	2	0.99	scaled_from_l720_frequency_fraction
+28798258	336	2	0.99	scaled_from_l720_frequency_fraction
+28798259	720	2	0.5	scaled_from_l720_frequency_fraction

@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_fits_sparse_period",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28332070",
+  "log_file": "logs/AsySpecX_phase3/phase3_fits_sparse_period_weather_sl720_pl192_sd2027.log",
+  "mae": 0.2631518840789795,
+  "mse": 0.2150598168373108,
+  "pred_len": 192,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.4761048
+}

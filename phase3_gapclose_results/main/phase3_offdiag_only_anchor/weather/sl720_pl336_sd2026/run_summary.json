@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_offdiag_only_anchor",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28332115",
+  "log_file": "logs/AsySpecX_phase3/phase3_offdiag_only_anchor_weather_sl720_pl336_sd2026.log",
+  "mae": 0.29449182748794556,
+  "mse": 0.25621122121810913,
+  "pred_len": 336,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.5183744
+}

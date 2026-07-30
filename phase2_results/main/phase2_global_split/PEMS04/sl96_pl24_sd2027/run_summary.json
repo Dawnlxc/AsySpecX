@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_global_split",
+  "dataset": "PEMS04",
+  "exit_code": 0,
+  "job_id": "28307204",
+  "log_file": "logs/AsySpecX_phase2/phase2_global_split_PEMS04_sl96_pl24_sd2027.log",
+  "mae": 0.2601502537727356,
+  "mse": 0.14667809009552002,
+  "pred_len": 24,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

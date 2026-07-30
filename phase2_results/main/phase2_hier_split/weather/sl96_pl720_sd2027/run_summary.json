@@ -1,0 +1,13 @@
+{
+  "arm": "phase2_hier_split",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28307354",
+  "log_file": "logs/AsySpecX_phase2/phase2_hier_split_weather_sl96_pl720_sd2027.log",
+  "mae": 0.3612666130065918,
+  "mse": 0.3644613027572632,
+  "pred_len": 720,
+  "seed": 2027,
+  "seq_len": 96,
+  "status": "ok"
+}

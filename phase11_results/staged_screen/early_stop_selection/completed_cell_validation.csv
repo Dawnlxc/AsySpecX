@@ -1,0 +1,5 @@
+role,base_profile,dataset,seq_len,pred_len,seed,cut_freq,stage_a_val_mse,tail2_val_mse,delta_val,delta_val_pct,tail2_win,expected_extension_scale,reported_extension_scale
+active,ind_cycle_full,ETTm1,96,336,2026,7,0.6522649,0.6529983,0.0007333999999999952,0.11243897992978535,0,0.4285714285714286,0.4285714285714286
+active,ind_cycle_full,ETTm1,96,720,2026,7,0.9712688,0.9718922,0.0006233999999999407,0.06418408580610713,0,0.7333333333333334,0.7333333333333334
+identity,ind_cycle_full,ETTm1,96,96,2026,7,0.3810896,0.3810896,0.0,0.0,0,0.0,0.0
+identity,ind_cycle_full,ETTm1,96,192,2026,7,0.5036939,0.5036939,0.0,0.0,0,0.0,0.0

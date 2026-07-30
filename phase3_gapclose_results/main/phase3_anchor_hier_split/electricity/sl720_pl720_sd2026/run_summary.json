@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_anchor_hier_split",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28331948",
+  "log_file": "logs/AsySpecX_phase3/phase3_anchor_hier_split_electricity_sl720_pl720_sd2026.log",
+  "mae": 0.3051636517047882,
+  "mse": 0.21035346388816833,
+  "pred_len": 720,
+  "seed": 2026,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1792761
+}

@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_diag_only_weather_guard",
+  "dataset": "weather",
+  "exit_code": 0,
+  "job_id": "28332101",
+  "log_file": "logs/AsySpecX_phase3/phase3_diag_only_weather_guard_weather_sl720_pl96_sd2027.log",
+  "mae": 0.20838049054145813,
+  "mse": 0.15146157145500183,
+  "pred_len": 96,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.392724
+}

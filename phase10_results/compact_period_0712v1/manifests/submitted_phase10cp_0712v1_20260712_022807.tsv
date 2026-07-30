@@ -1,0 +1,7 @@
+job_id	arm	dataset	seq_len	pred_len	seed	cut_freq
+28661595	compact_period_cycle_full	electricity	168	96	2026	43
+28661596	compact_period_cycle_full	electricity	168	336	2026	43
+28661597	compact_period_cycle_full	electricity	336	96	2026	85
+28661598	compact_period_cycle_full	electricity	336	336	2026	85
+28661599	compact_period_cycle_full	electricity	720	96	2026	181
+28661600	compact_period_cycle_full	electricity	720	336	2026	181

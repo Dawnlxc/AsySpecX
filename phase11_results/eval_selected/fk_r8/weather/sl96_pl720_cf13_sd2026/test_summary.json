@@ -1,0 +1,22 @@
+{
+  "arm": "fk_r8",
+  "cut_freq": 13,
+  "dataset": "weather",
+  "exit_code": 0,
+  "forecast_kernel_gate_mean": 0.04300687462091446,
+  "job_id": "28797086",
+  "log_file": "logs/AsySpecX_phase11_eval/phase11_screen_0715v1_fk_r8_weather_sl96_pl720_cf13_sd2026.log",
+  "mae": 0.3387763202190399,
+  "mse": 0.34273892641067505,
+  "n_param": 75714,
+  "peak_cuda_mb": 143.36,
+  "pred_len": 720,
+  "seed": 2026,
+  "selection_val_mse": 0.6855323,
+  "seq_len": 96,
+  "source_summary": "phase11_results/screen/fk_r8/weather/sl96_pl720_cf13_sd2026/run_summary.json",
+  "status": "ok",
+  "t_inf": 5.3971,
+  "t_train": 437.5251,
+  "test_opened_after_validation_selection": true
+}

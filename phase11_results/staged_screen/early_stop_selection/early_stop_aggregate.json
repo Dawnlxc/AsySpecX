@@ -1,0 +1,17 @@
+{
+  "active_regressions_over_0_05_pct": 2,
+  "active_wins_so_far": 0,
+  "complete_cells": 4,
+  "completed_active_cells": 2,
+  "completed_identity_ok": 1,
+  "completed_rows": 12,
+  "decisive_early_stop": 1,
+  "manifest_rows": 27,
+  "maximum_possible_active_wins": 2,
+  "minimum_required_active_wins": 3,
+  "observed_resource_failure": 1,
+  "partial_cells": 0,
+  "total_active_cells": 4,
+  "win_gate_impossible": 1,
+  "worst_completed_active_regression_pct": 0.11243897992978535
+}

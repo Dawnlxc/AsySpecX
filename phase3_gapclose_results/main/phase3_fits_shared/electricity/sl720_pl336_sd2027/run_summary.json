@@ -1,0 +1,14 @@
+{
+  "arm": "phase3_fits_shared",
+  "dataset": "electricity",
+  "exit_code": 0,
+  "job_id": "28331967",
+  "log_file": "logs/AsySpecX_phase3/phase3_fits_shared_electricity_sl720_pl336_sd2027.log",
+  "mae": 0.27129754424095154,
+  "mse": 0.1719234734773636,
+  "pred_len": 336,
+  "seed": 2027,
+  "seq_len": 720,
+  "status": "ok",
+  "val_mse": 0.1473228
+}

@@ -1,0 +1,7 @@
+job_id	arm	dataset	seq_len	pred_len	seed	cut_freq
+28802929	dense_direct	weather	96	720	2026	13
+28802930	fk_r8_cs	weather	96	720	2026	13
+28802931	fk_sm2_shared	weather	96	720	2026	13
+28802932	fk_sm2_mode	weather	96	720	2026	13
+28802933	fk_sm4_mode	weather	96	720	2026	13
+28802934	fk_sm4_frozen	weather	96	720	2026	13
